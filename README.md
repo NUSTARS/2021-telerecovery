@@ -8,3 +8,4 @@
   - Do not want to take up too much space in the rocket 
 - Detect separation of launch vehicle
 - Detect connection status of ejection charges
+- Protected from black powder residue
