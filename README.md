@@ -9,5 +9,8 @@
 - Detect separation of launch vehicle
 - Detect connection status of ejection charges
 - Protected from black powder residue
+- Remember to consider the fact that carbon fiber is RF opaque
 
 [Google Drive link](https://drive.google.com/drive/u/1/folders/1rWdLhBEQf0NXYTq_rxv_L2-M3DT5xfJa)
+
+
