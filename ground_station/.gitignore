@@ -1,5 +1,3 @@
-# PlatformIO Example Code
-.pio/build
-.pio/libdeps/heltec_wifi_lora_32_V2/Heltec ESP32 Dev-Boards/examples
+.pio
 .vscode
 
