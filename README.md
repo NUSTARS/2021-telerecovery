@@ -11,7 +11,12 @@
 - Protected from black powder residue
 - Remember to consider the fact that carbon fiber is RF opaque
 
-[Google Drive link](https://drive.google.com/drive/u/1/folders/1rWdLhBEQf0NXYTq_rxv_L2-M3DT5xfJa)
+## Further Objectives:
+- Add more sensors to create a more complete sensor/telemetry suite
+- Create a desktop/web-app dashboard for the telemetry data. Maybe someting like [this](https://ambasat.com/wp-content/uploads/2019/05/Dashboard-with-dropshadow2.jpg).
+
+## Google Drive
+Here is a [Google Drive link](https://drive.google.com/drive/u/1/folders/1rWdLhBEQf0NXYTq_rxv_L2-M3DT5xfJa) for anything else we may not want to put on GitHub like pictures, videos, test results, etc.
 
 ## Useage
 The easiest way to use the code in this repo is to download PlatformIO and use the provided platformio.ini initialization file when you create a new project. PlatformIO functions well with many modernIDE's and text editors like Atom or Visual Studio Code.
