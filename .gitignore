@@ -1,4 +1,5 @@
 .vscode/
 *.asv
-chipID_ground.txt
-chipID_telemetry.txt
+sender_chipID.txt
+reciever_chipID.txt
+
