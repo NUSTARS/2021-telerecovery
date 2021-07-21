@@ -1,21 +1,7 @@
 /*
-  This is a simple example show the Heltec.LoRa sended data in OLED.
 
-  The onboard OLED display is SSD1306 driver and I2C interface. In order to make the
-  OLED correctly operation, you should output a high-low-high(1-0-1) signal by soft-
-  ware to OLED's reset pin, the low-level signal at least 5ms.
+  Adapted from OLED_LoRa_Sender
 
-  OLED pins to ESP32 GPIOs via this connecthin:
-  OLED_SDA -- GPIO4
-  OLED_SCL -- GPIO15
-  OLED_RST -- GPIO16
-  
-  by Aaron.Lee from HelTec AutoMation, ChengDu, China
-  成都惠利特自动化科技有限公司
-  https://heltec.org
-  
-  this project also realess in GitHub:
-  https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series
 */
 #include <Arduino.h>
 #include "heltec.h"
@@ -28,15 +14,13 @@ String rssi = "RSSI --";
 String packSize = "--";
 String packet ;
 
-void logo()
-{
+void logo(){
   Heltec.display->clear();
   Heltec.display->drawXbm(0,5,logo_width,logo_height,logo_bits);
   Heltec.display->display();
 }
 
-void setup()
-{
+void setup(){
    //WIFI Kit series V1 not support Vext control
   Heltec.begin(true /*DisplayEnable Enable*/, true /*Heltec.Heltec.Heltec.LoRa Disable*/, true /*Serial Enable*/, true /*PABOOST Enable*/, BAND /*long BAND*/);
  
@@ -47,13 +31,12 @@ void setup()
   delay(1500);
   Heltec.display->clear();
   
-  Heltec.display->drawString(0, 0, "Heltec.LoRa Initial success!");
+  Heltec.display->drawString(0, 0, "LoRa Initialized Successfully");
   Heltec.display->display();
   delay(1000);
 }
 
-void loop()
-{
+void loop(){
   Heltec.display->clear();
   Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
   Heltec.display->setFont(ArialMT_Plain_10);
