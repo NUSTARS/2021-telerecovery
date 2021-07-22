@@ -25,7 +25,6 @@ void setup(){
       Serial.println(F("Failed to boot VL53L0X"));
       while(1);
   }
-
 }
 
 void loop(){
