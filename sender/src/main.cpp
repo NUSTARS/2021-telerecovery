@@ -1,33 +1,24 @@
 /*
-
-  Adapted from OLED_LoRa_Sender
-
+  Adapted from ...\examples\LoRa\OLED_LoRa_Sender.ino
 */
 #include <Arduino.h>
 #include "heltec.h"
-#include "images.h"
 #include "ToF.h"
 
 #define BAND 915E6  // You can set band here directly,e.g. 868E6,915E6
 
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X();
 
-String rssi = "RSSI --";
-String packSize = "--";
-String packet ;
-
 void setup(){
-   //WIFI Kit series V1 not support Vext control
-  Heltec.begin(false /*DisplayEnable Enable*/, true /*Heltec.Heltec.Heltec.LoRa Disable*/, true /*Serial Enable*/, true /*PABOOST Enable*/, BAND /*long BAND*/);
- 
-  delay(1500);
 
-  Serial.begin(115200);
-    
-  // Wait until serial port opens for native USB devices
-  while (! Serial) {
-      delay(1);
-  }
+  Heltec.begin(
+    false /*DisplayEnable Enable*/,
+    true /*Heltec.Heltec.Heltec.LoRa Disable*/, 
+    true /*Serial Enable*/, 
+    true /*PABOOST Enable*/, 
+    BAND /*long BAND*/);
+ 
+  delay(1500); // Maybe do not need this or can be shorter?
 
   // Initialize time of flight sensor
   if (!ToF.begin()) {
@@ -44,12 +35,9 @@ void loop(){
 
   if (val.RangeStatus != 4) {  // phase failures have incorrect data
     ToF_flag = true;
-      // Serial.print("Distance (mm): "); 
-      // Serial.println(val.RangeMilliMeter);
   } 
   else {
     ToF_flag = false;
-    // Serial.println(" Out of range ");
   }
 
   // Send packet
