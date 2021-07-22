@@ -22,7 +22,6 @@ void setup(){
  
   delay(1500);
 
-
   Serial.begin(115200);
     
   // Wait until serial port opens for native USB devices
@@ -63,7 +62,7 @@ void loop(){
     LoRa.print(" mm ");
   }
   else{
-    LoRa.print("Distance = ???");
+    LoRa.print("Distance = ??");
   }
   LoRa.endPacket();
 
