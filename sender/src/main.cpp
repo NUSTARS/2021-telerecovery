@@ -60,6 +60,7 @@ void loop(){
   if (ToF_flag){
     LoRa.print("Distance = ");
     LoRa.print(val.RangeMilliMeter);
+    LoRa.print(" mm ");
   }
   else{
     LoRa.print("Distance = ???");
