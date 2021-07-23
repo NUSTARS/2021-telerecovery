@@ -1,43 +1,15 @@
 /*
-  This is a simple example show the Heltec.LoRa recived data in OLED.
-
-  The onboard OLED display is SSD1306 driver and I2C interface. In order to make the
-  OLED correctly operation, you should output a high-low-high(1-0-1) signal by soft-
-  ware to OLED's reset pin, the low-level signal at least 5ms.
-
-  OLED pins to ESP32 GPIOs via this connecthin:
-  OLED_SDA -- GPIO4
-  OLED_SCL -- GPIO15
-  OLED_RST -- GPIO16
-  
-  by Aaron.Lee from HelTec AutoMation, ChengDu, China
-  成都惠利特自动化科技有限公司
-  www.heltec.cn
-  
-  this project also realess in GitHub:
-  https://github.com/Heltec-Aaron-Lee/WiFi_Kit_series
+  Adapted from ...\examples\LoRa\OLED_LoRa_Reciever.ino
 */
 
-/**************************
-
-GROUND STATION
-
-***************************/
-
-
-#include "heltec.h" 
-#include "images.h"
+#include "OLED.h"
 
 #define BAND    915E6  //you can set band here directly,e.g. 868E6,915E6
 String rssi = "RSSI --";
 String packSize = "--";
 String packet ;
 
-void logo(){
-  Heltec.display->clear();
-  Heltec.display->drawXbm(0,5,logo_width,logo_height,logo_bits);
-  Heltec.display->display();
-}
+
 
 void LoRaData(){
   Heltec.display->clear();
@@ -58,15 +30,15 @@ void cbk(int packetSize) {
 }
 
 void setup() { 
-   //WIFI Kit series V1 not support Vext control
-  Heltec.begin(true /*DisplayEnable Enable*/, true /*Heltec.Heltec.Heltec.LoRa Disable*/, true /*Serial Enable*/, true /*PABOOST Enable*/, BAND /*long BAND*/);
- 
-  Heltec.display->init();
-  Heltec.display->flipScreenVertically();  
-  Heltec.display->setFont(ArialMT_Plain_10);
-  logo();
-  delay(1500);
-  Heltec.display->clear();
+   //WIFI Kit series V1 not support Vext control  
+  Heltec.begin(
+    true /*DisplayEnable Enable*/,
+    true /*Heltec.Heltec.Heltec.LoRa Disable*/, 
+    true /*Serial Enable*/, 
+    true /*PABOOST Enable*/, 
+    BAND /*long BAND*/);
+
+  OLED_init();
   
   Heltec.display->drawString(0, 0, "Heltec.LoRa Initial success!");
   Heltec.display->drawString(0, 10, "Wait for incoming data...");
@@ -78,6 +50,10 @@ void setup() {
 
 void loop() {
   int packetSize = LoRa.parsePacket();
-  if (packetSize) { cbk(packetSize);  }
+  
+  if (packetSize){
+    cbk(packetSize);
+  }
+
   delay(10);
 }
