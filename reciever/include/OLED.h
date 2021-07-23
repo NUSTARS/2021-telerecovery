@@ -7,5 +7,6 @@
 
 void OLED_init(void);
 void logo(void);
+void printText(int16_t x, int16_t y, uint16_t maxLineWidth, String text);
 
 #endif
