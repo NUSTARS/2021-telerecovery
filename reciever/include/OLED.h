@@ -7,6 +7,6 @@
 
 void OLED_init(void);
 void logo(void);
-void printText(int16_t x, int16_t y, uint16_t maxLineWidth, String text);
+void print_LoRa_data(int16_t x, int16_t y, uint16_t maxLineWidth, String packet, String rssi);
 
 #endif

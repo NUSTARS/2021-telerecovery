@@ -22,10 +22,11 @@ void logo(void){
 }
 
 
-void printText(int16_t x, int16_t y, uint16_t maxLineWidth, String text){
+void print_LoRa_data(int16_t x, int16_t y, uint16_t maxLineWidth, String packet, String rssi){
   Heltec.display->clear();
   Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
   Heltec.display->setFont(ArialMT_Plain_10);
-  Heltec.display->drawStringMaxWidth(x, y, maxLineWidth, text); 
+  Heltec.display->drawString(0, 0, rssi);  
+  Heltec.display->drawStringMaxWidth(x, y, maxLineWidth, packet); 
   Heltec.display->display();
 }
