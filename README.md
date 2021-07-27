@@ -19,5 +19,7 @@
 Here is a [Google Drive link](https://drive.google.com/drive/u/1/folders/1rWdLhBEQf0NXYTq_rxv_L2-M3DT5xfJa) for anything else we may not want to put on GitHub like pictures, videos, test results, etc.
 
 ## Useage
-The easiest way to use the code in this repo is to download PlatformIO and use the provided platformio.ini initialization file when you create a new project. PlatformIO functions well with many modernIDE's and text editors like Atom or Visual Studio Code.
+*Note: almost all this code is hardware dependent so unless you have the exact same hardware, you can't use it. The groundstation app is not entirely hardware dependent/the incoming data could be simulated without too much trouble*
+
+The easiest way to use the code in this repo is to download PlatformIO and use the provided platformio.ini initialization file when you create a new project. PlatformIO functions well with many modernIDE's and text editors like Visual Studio Code or Atom. 
 
