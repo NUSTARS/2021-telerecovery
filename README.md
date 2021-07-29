@@ -7,7 +7,7 @@
 - Small form factor
   - Do not want to take up too much space in the rocket 
 - Detect separation of launch vehicle
-- Detect connection status of ejection charges(maybe not-NASA would not like)
+- Detect connection status of ejection charges (maybe not, NASA would not like)
 - Protected from black powder residue
 - Remember to consider the fact that carbon fiber is RF opaque
 
