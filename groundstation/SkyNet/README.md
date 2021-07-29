@@ -7,7 +7,7 @@ In the project directory, you can run:
 
 ### `npm install`
 
-Install all the dependencies, assuming you already have Node.js and Python installed.
+Install all the dependencies, assuming you already have Electron, Node.js and Python installed.
 
 ### `npm start`
 
