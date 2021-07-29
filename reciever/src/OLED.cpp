@@ -8,7 +8,7 @@ void OLED_init(void){
     delay(1500);
     Heltec.display->clear();
 
-    Heltec.display->drawString(0, 0, "Heltec.LoRa Initial success!");
+    Heltec.display->drawString(0, 0, "Initialization success!");
     Heltec.display->drawString(0, 10, "Waiting for data...");
     Heltec.display->display();
     delay(500);

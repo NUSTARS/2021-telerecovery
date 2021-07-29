@@ -10,7 +10,8 @@ String packSize = "--";
 String packet;
 
 void setup() { 
-
+  Serial.begin(115200);
+  
   Heltec.begin(
     true /*Display Enabled*/,
     true /*Heltec.Heltec.Heltec.LoRa Disable*/, 
