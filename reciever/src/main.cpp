@@ -1,6 +1,7 @@
 /*
-  Adapted from ...\examples\LoRa\OLED_LoRa_Reciever.ino
+  Adapted from .pio\libdeps\heltec_wifi_lora_32_V2\\examples\LoRa\OLED_LoRa_Reciever.ino
 */
+
 #include <Arduino.h>
 #include "OLED.h"
 #include "LoRa_RX.h"
