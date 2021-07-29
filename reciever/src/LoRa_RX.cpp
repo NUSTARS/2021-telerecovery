@@ -10,9 +10,9 @@ void cbk(int packetSize) {
   }
 
   rssi = "RSSI " + String(LoRa.packetRssi(), DEC) ;
-  
+
   print_LoRa_data(0,26,128,packet,rssi);
 
-  Serial.println(packet);
+  Serial.println(packet); // Print packet over UART -> to JS app
 }
 
