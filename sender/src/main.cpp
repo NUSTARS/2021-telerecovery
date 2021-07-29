@@ -1,5 +1,6 @@
 /*
-  Adapted from ...\examples\LoRa\OLED_LoRa_Sender.ino
+  Adapted from
+  ...\heltec_wifi_lora_32_V2\Heltec ESP32 Dev-Boards\examples\LoRa\OLED_LoRa_Sender\OLED_LoRa_Sender.ino
 */
 #include <Arduino.h>
 #include "heltec.h"
