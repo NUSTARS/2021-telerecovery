@@ -1,16 +1,5 @@
 /*
   Adapted from ...\examples\LoRa\OLED_LoRa_Reciever.ino
-
-  TODO: 
-    - Reintroduce RSSI reading because it is probably useful
-        RSSI minimum = -120 dBm.
-        If RSSI=-30dBm: signal is strong.
-        If RSSI=-120dBm: signal is weak.
-
-    - Decide how best to organize (where to put cbk function)
-    
-    - Do I keep those same global variables?
-
 */
 #include <Arduino.h>
 #include "OLED.h"

@@ -9,6 +9,9 @@ an identifier that can be no more than a 32-bit integer
 created 2020-06-07 by cweinhofer
 with help from Cicicok */
 
+// #define CHIPID 1
+
+#ifdef CHIPID
 #include <Arduino.h>
 
 uint64_t chipId = 0;
@@ -30,3 +33,4 @@ void loop() {
 	delay(3000);
 
 }
+#endif

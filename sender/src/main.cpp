@@ -40,7 +40,6 @@ void loop(){
   }
 
   // Send packet
-  // TODO: make into a separate function
   LoRa.beginPacket();
   LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
   if (ToF_flag){
