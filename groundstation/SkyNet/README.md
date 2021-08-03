@@ -4,7 +4,7 @@ SkyNet is a ground station software for High Powered Rockets.
 ## Features
 TBD
 
-### Useful Commands
+## Useful Commands
 
 In the project directory, you can run:
 
