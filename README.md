@@ -1,4 +1,5 @@
 # Recovery Systems Telemetry Module
+A Telemetry Software-Hardware Package for High Powered Rockets.
 
 ## Basic Requirements:
 - Under $200 total 
