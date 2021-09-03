@@ -1,4 +1,4 @@
-BerryIMUv3: (quick start guide)[https://ozzmaker.com/berryimu-quick-start-guide/#Arduino%20wiring]  (github)[https://github.com/ozzmaker/BerryIMU]
+BerryIMUv3: [quick start guide](https://ozzmaker.com/berryimu-quick-start-guide/#Arduino%20wiring), [github](https://github.com/ozzmaker/BerryIMU)
 
 # Recovery Systems Telemetry Module
 A Telemetry Software-Hardware Package for High Powered Rockets.
