@@ -3,20 +3,17 @@ BerryIMUv3: [quick start guide](https://ozzmaker.com/berryimu-quick-start-guide/
 # Recovery Systems Telemetry Module
 A Telemetry Software-Hardware Package for High Powered Rockets.
 
-## Basic Requirements:
+## Objectives:
 - Under $200 total 
 - 2 mile range to be safe
   - Assuming typical NSL flight profile, apogee is typically between 4000-6000ft 
 - Small form factor
   - Do not want to take up too much space in the rocket 
 - Detect separation of launch vehicle
-- Detect connection status of ejection charges (maybe not, NASA would not like)
+- Collect as much data as possible; acceleration, gyro, pressure, temperature
 - Protected from black powder residue
 - Remember to consider the fact that carbon fiber is RF opaque
-
-## Further Objectives:
-- Add more sensors to create a more complete sensor/telemetry suite
-- Create a desktop/web-app dashboard for the telemetry data. Maybe someting like [this](https://ambasat.com/wp-content/uploads/2019/05/Dashboard-with-dropshadow2.jpg).
+- Cross-platform desktop GUI application for displaying sensor data in a nice way
 
 ## Google Drive
 Here is a [Google Drive link](https://drive.google.com/drive/u/1/folders/1rWdLhBEQf0NXYTq_rxv_L2-M3DT5xfJa) for anything else we may not want to put on GitHub like pictures, videos, test results, etc.
