@@ -1,0 +1,3 @@
+[submodule "sender/BerryIMU"]
+	path = sender/BerryIMU
+	url = https://github.com/ozzmaker/BerryIMU
