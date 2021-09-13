@@ -13,7 +13,12 @@
 
 */
 
+#include <Arduino.h>
 #include "IMU.h"
+
+#ifndef M_PI
+    #define M_PI 3.14159265358979323846
+#endif
 
 #define DT  0.02          // Loop time
 #define AA  0.97         // complementary filter constant
