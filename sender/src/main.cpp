@@ -23,8 +23,6 @@ float gyroZangle = 0.0;
 float AccYangle = 0.0;
 float AccXangle = 0.0;
 
-unsigned long starttime;
-
 void setup(){
 
   // Start ESP32 Board
@@ -50,13 +48,9 @@ void setup(){
   Serial.begin(115200); // init serial for testing
   delay(500);
 
-  starttime = millis();
-
 }
 
 void loop(){
-
-  unsigned long timenow = millis();
 
   //Read the measurements from  sensors
   readACC(buff);
@@ -94,14 +88,11 @@ void loop(){
 
 
   if (ToF_flag){
-    Serial.print(val.RangeMilliMeter);
+    Serial.println(val.RangeMilliMeter);
   }
   else{
-    Serial.print("?");
+    Serial.println("?");
   }
-
-  Serial.print("\tTime=");
-  Serial.println(starttime-timenow);
 
 
   // // Send packet
