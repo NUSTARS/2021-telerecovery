@@ -1,7 +1,7 @@
 .vscode/
 *.asv
 purchases/
-sender_chipID.txt
+transmitter_chipID.txt
 reciever_chipID.txt
 .DS_Store
 node_modules
