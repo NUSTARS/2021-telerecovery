@@ -1,10 +1,9 @@
 void detectIMU();
 void enableIMU();
-void readACC(byte buff[]);
-void readMAG(byte buff[]);
-void readGYR(byte buff[]);
+void readACC(unsigned char buff[]);
+void readMAG(unsigned char buff[]);
+void readGYR(unsigned char buff[]);
 
-
-void writeTo(int device, byte address, byte val);
-void readFrom(int device, byte address, int num, byte buff[]);
+void writeTo(int device,  unsigned char address,  unsigned char val);
+void readFrom(int device,  unsigned char address, int num,  unsigned char buff[]);
 

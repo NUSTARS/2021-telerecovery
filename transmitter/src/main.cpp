@@ -2,6 +2,7 @@
   Adapted from
   ...\heltec_wifi_lora_32_V2\Heltec ESP32 Dev-Boards\examples\LoRa\OLED_LoRa_Sender\OLED_LoRa_Sender.ino
 */
+
 #include <Arduino.h>
 #include "heltec.h"
 #include "ToF.h"
@@ -9,14 +10,19 @@
 
 #define BAND 915E6  // You can set band here directly,e.g. 868E6,915E6
 
+#ifndef M_PI
+  #define M_PI 3.141592653589793
+#endif
+
 #define DT  0.02          // Loop time
 
 
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X();
 
-byte buff[6];
+unsigned char buff[6];
 int accRaw[3];
 int gyrRaw[3];
+
 float gyroXangle = 0.0;
 float gyroYangle = 0.0;
 float gyroZangle = 0.0;
