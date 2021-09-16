@@ -25,11 +25,23 @@ void setup() {
   LoRa.receive();
 }
 
+int count = 0;
+
 void loop() {
+  char msg[50];
+
   int packetSize = LoRa.parsePacket();
   
   if (packetSize){
+    OLED_clear();
+
     cbk(packetSize);
+
+    count ++;
+    sprintf(msg,"Packet received: %d",count);
+    OLED_print(0,26,MAX_SCREEN_WIDTH,msg);
+    
+    // memset(msg,0,sizeof(msg));
   }
 
   delay(10);

@@ -102,21 +102,12 @@ void loop()
   char data_format[] = "%f, %f, %hu, %f, %f, %f";
   sprintf(buffer, data_format, AccXangle, AccYangle, tof_data, bmp.temperature, bmp.pressure, bmp.readAltitude(SEALEVELPRESSURE_HPA));
 
-  Serial.println(buffer); // Printing all the data to test (change to LoRa print)
+  // Serial.println(buffer); // Printing to serial for testing
+
+  LoRa.beginPacket();
+  LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
+  LoRa.print(buffer);
+  LoRa.endPacket();
+  
   delay(200);
-
-  // // Send packet
-  // LoRa.beginPacket();
-  // LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
-  // if (ToF_flag){
-  //   LoRa.print("Distance = ");
-  //   LoRa.print(val.RangeMilliMeter);
-  //   LoRa.print(" mm ");
-  // }
-  // else{
-  //   LoRa.print("Distance = ??");
-  // }
-  // LoRa.endPacket();
-
-  // delay(100);
 }

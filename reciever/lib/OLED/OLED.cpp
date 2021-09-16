@@ -22,11 +22,23 @@ void logo(void){
 }
 
 
-void print_LoRa_data(int16_t x, int16_t y, uint16_t maxLineWidth, String packet, String rssi){
-  Heltec.display->clear();
+void print_LoRa_data(int16_t x, int16_t y, uint16_t maxLineWidth, String msg, String rssi){
+  // Heltec.display->clear();
   Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
   Heltec.display->setFont(ArialMT_Plain_10);
   Heltec.display->drawString(0, 0, rssi);  
-  Heltec.display->drawStringMaxWidth(x, y, maxLineWidth, packet); 
+  Heltec.display->drawStringMaxWidth(x, y, maxLineWidth, msg); 
   Heltec.display->display();
+}
+
+void OLED_print(int16_t x, int16_t y, uint16_t maxLineWidth, String msg) {
+  // Heltec.display->clear();
+  Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
+  Heltec.display->setFont(ArialMT_Plain_10);
+  Heltec.display->drawStringMaxWidth(x, y, maxLineWidth, msg); 
+  Heltec.display->display();
+}
+
+void OLED_clear(void) {
+  Heltec.display->clear();
 }
