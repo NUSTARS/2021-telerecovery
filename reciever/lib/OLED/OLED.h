@@ -3,7 +3,7 @@
 #define OLED_H_
 
 #include "heltec.h"
-#include "images.h"
+#include "boot_logo.h"
 
 void OLED_init(void);
 void logo(void);
