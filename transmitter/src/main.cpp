@@ -109,5 +109,4 @@ void loop()
   LoRa.print(buffer);
   LoRa.endPacket();
   
-  delay(200);
-}
+  }
