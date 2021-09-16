@@ -5,7 +5,7 @@ void OLED_init(void){
   Heltec.display->flipScreenVertically();  
   Heltec.display->setFont(ArialMT_Plain_10);
   OLED_logo();
-  delay(500);
+  delay(1500);
   Heltec.display->clear();
 
   Heltec.display->drawString(0, 0, "Initialization success!");

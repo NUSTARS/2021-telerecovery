@@ -40,9 +40,7 @@ void loop() {
     count ++;
     sprintf(msg,"Packet received: %d",count);
     OLED_print(0,26,MAX_SCREEN_WIDTH,msg);
-    
-    // memset(msg,0,sizeof(msg));
   }
 
-  delay(10);
+  delay(20);
 }

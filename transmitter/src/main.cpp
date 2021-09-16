@@ -24,7 +24,7 @@ void setup()
       true /*PABOOST Enable*/,
       BAND /*long BAND*/);
 
-  delay(1000); // Maybe do not need this or can be shorter?
+  delay(500); // Maybe do not need this or can be shorter?
 
   // Initialize time of flight sensor
   if (!ToF.begin())
@@ -38,8 +38,8 @@ void setup()
   detectIMU();
   enableIMU();
 
-  Serial.begin(115200); // init serial for testing
-  delay(50);
+  // Serial.begin(115200); // init serial for testing
+  // delay(50);
 
   if (!bmp.begin_I2C())
   {
@@ -108,5 +108,7 @@ void loop()
   LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
   LoRa.print(buffer);
   LoRa.endPacket();
+
+  delay(20);
   
   }
