@@ -1,10 +1,4 @@
-#include <Arduino.h>
-#include <Wire.h>
-#include "LSM6DSL.h"
-#include "LIS3MDL.h"
-#include "BMP388.h"
-
-int BerryIMUversion = 99;
+#include "IMU.h"
 
 void writeTo(int device, unsigned char address, unsigned char val)
 {
@@ -34,32 +28,27 @@ void readFrom(int device, unsigned char address, int num, unsigned char buff[])
 
 void detectIMU()
 {
-  //Detect which version of BerryIMU is connected using the 'who am i' register
-  //BerryIMUv1 uses the LSM9DS0
-  //BerryIMUv2 uses the LSM9DS1
-  //BerryIMUv3 uses the LSM6DSL and LIS3MDL
 
   Wire.begin();
-  //  unsigned char LSM9DS0_WHO_AM_I_G_response;
-  //  unsigned char LSM9DS0_WHO_AM_I_XM_response;
-  //  unsigned char LSM9DS1_WHO_M_response;
-  //  unsigned char LSM9DS1_WHO_XG_response;
-  unsigned char LSM6DSL_WHO_AM_I_response;
-  unsigned char LIS3MDL_WHO_AM_I_response;
+  unsigned char LSM6DSL_WHO_AM_I_response; // Accelerometer and gyroscope
+  unsigned char LIS3MDL_WHO_AM_I_response; // Magnetometer
+  unsigned char BMP388_WHO_AM_I_response;  // Pressure Sensor
 
-  unsigned char WHOresponse[2];
+  unsigned char WHOresponse[3];
 
-  //Detect if BerryIMUv3 (Which uses the LSM6DSL and LIS3MDL) is connected
+  //Detect if LSM6DSL (acc and gyro), LIS3MDL (magnetometer), and BMP388 (pressure) sensors are connected
   readFrom(LSM6DSL_ADDRESS, LSM6DSL_WHO_AM_I, 1, WHOresponse);
   LSM6DSL_WHO_AM_I_response = WHOresponse[0];
 
   readFrom(LIS3MDL_ADDRESS, LIS3MDL_WHO_AM_I, 1, WHOresponse);
   LIS3MDL_WHO_AM_I_response = WHOresponse[0];
 
-  if (LSM6DSL_WHO_AM_I_response == 0x6A && LIS3MDL_WHO_AM_I_response == 0x3D)
+  readFrom(I2C_ADD_BMP388, BMP388_REG_ADD_WIA, 1, WHOresponse);
+  BMP388_WHO_AM_I_response = WHOresponse[0];
+
+  if (LSM6DSL_WHO_AM_I_response == 0x6A && LIS3MDL_WHO_AM_I_response == 0x3D && BMP388_WHO_AM_I_response == BMP388_REG_VAL_WIA)
   {
-    Serial.println("\n\n   BerryIMUv3(LSM6DSL & LIS3MLD) found \n\n");
-    BerryIMUversion = 3;
+    Serial.println("\n\n   BerryIMUv3(LSM6DSL, LIS3MLD, & BMP388) found \n\n");
   }
 
   delay(1000);
@@ -67,26 +56,26 @@ void detectIMU()
 
 void enableIMU()
 {
+  //initialise the accelerometer
+  writeTo(LSM6DSL_ADDRESS, LSM6DSL_CTRL1_XL, 0b10011111); // ODR 3.33 kHz, +/- 8g , BW = 400hz
+  writeTo(LSM6DSL_ADDRESS, LSM6DSL_CTRL8_XL, 0b11001000); // Low pass filter enabled, BW9, composite filter
+  writeTo(LSM6DSL_ADDRESS, LSM6DSL_CTRL3_C, 0b01000100);  // Enable Block Data update, increment during multi  unsigned char read
 
-  if (BerryIMUversion == 3)
-  { //For BerryIMUv3
+  //initialise the gyroscope
+  writeTo(LSM6DSL_ADDRESS, LSM6DSL_CTRL2_G, 0b10011100); // ODR 3.3 kHz, 2000 dps
 
-    //initialise the accelerometer
-    writeTo(LSM6DSL_ADDRESS, LSM6DSL_CTRL1_XL, 0b10011111); // ODR 3.33 kHz, +/- 8g , BW = 400hz
-    writeTo(LSM6DSL_ADDRESS, LSM6DSL_CTRL8_XL, 0b11001000); // Low pass filter enabled, BW9, composite filter
-    writeTo(LSM6DSL_ADDRESS, LSM6DSL_CTRL3_C, 0b01000100);  // Enable Block Data update, increment during multi  unsigned char read
+  //initialise the magnetometer
+  writeTo(LIS3MDL_ADDRESS, LIS3MDL_CTRL_REG1, 0b11011100); // Temp sesnor enabled, High performance, ODR 80 Hz, FAST ODR disabled and Selft test disabled.
+  writeTo(LIS3MDL_ADDRESS, LIS3MDL_CTRL_REG2, 0b00100000); // +/- 8 gauss
+  writeTo(LIS3MDL_ADDRESS, LIS3MDL_CTRL_REG3, 0b00000000); // Continuous-conversion mode
+  // readFrom(LSM6DSL_ADDRESS, LIS3MDL_CTRL_REG3, 1, temp);
 
-    //initialise the gyroscope
-    writeTo(LSM6DSL_ADDRESS, LSM6DSL_CTRL2_G, 0b10011100); // ODR 3.3 kHz, 2000 dps
-
-    //initialise the magnetometer
-    writeTo(LIS3MDL_ADDRESS, LIS3MDL_CTRL_REG1, 0b11011100); // Temp sesnor enabled, High performance, ODR 80 Hz, FAST ODR disabled and Selft test disabled.
-    writeTo(LIS3MDL_ADDRESS, LIS3MDL_CTRL_REG2, 0b00100000); // +/- 8 gauss
-    writeTo(LIS3MDL_ADDRESS, LIS3MDL_CTRL_REG3, 0b00000000); // Continuous-conversion mode
-    unsigned char temp[11];
-    readFrom(LSM6DSL_ADDRESS, LIS3MDL_CTRL_REG3, 1, temp);
-    // Serial.print(temp);
-  }
+  // initialize pressure/temperature sensor
+  bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
+  bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
+  bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
+  bmp.setOutputDataRate(BMP3_ODR_50_HZ);
+  
 }
 
 void readACC(unsigned char buff[])

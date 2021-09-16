@@ -9,6 +9,7 @@
 #include "IMU.h"
 
 #define BAND 915E6  // You can set band here directly,e.g. 868E6,915E6
+#define SEALEVELPRESSURE_HPA (1013.25)
 
 #ifndef M_PI
   #define M_PI 3.141592653589793
@@ -18,6 +19,7 @@
 
 
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X();
+Adafruit_BMP3XX bmp; 
 
 unsigned char buff[6];
 int accRaw[3];
@@ -99,6 +101,19 @@ void loop(){
   else{
     Serial.println("?");
   }
+
+  //  Serial.print("Temperature = ");
+  // Serial.print(bmp.temperature);
+  // Serial.println(" *C");
+
+  // Serial.print("Pressure = ");
+  // Serial.print(bmp.pressure / 100.0);
+  // Serial.println(" hPa");
+
+  // Serial.print("Approx. Altitude = ");
+  // Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
+  // Serial.println(" m");
+  // delay(250);
 
 
   // // Send packet
