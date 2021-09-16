@@ -29,7 +29,7 @@ void setup()
   // Initialize time of flight sensor
   if (!ToF.begin())
   {
-    Serial.println(F("Failed to boot VL53L0X"));
+    // Serial.println(F("Failed to boot VL53L0X"));
     while (1)
       ;
   }
@@ -43,7 +43,7 @@ void setup()
 
   if (!bmp.begin_I2C())
   {
-    Serial.println("Failed to boot BMP388");
+    // Serial.println("Failed to boot BMP388");
     while (1)
       ;
   }
@@ -57,10 +57,8 @@ void setup()
 
 void loop()
 {
-
   if (!bmp.performReading())
   {
-    Serial.println("Failed to perform reading :(");
     return;
   }
 
@@ -87,7 +85,7 @@ void loop()
 
   VL53L0X_RangingMeasurementData_t val = read_ToF(ToF);
 
-  uint16_t tof_data;
+  uint16_t tof_data=0;
   if (val.RangeStatus != 4)
   {
     tof_data = val.RangeMilliMeter;
@@ -98,17 +96,15 @@ void loop()
   }
 
   // Pack up the data into an array
-  char buffer[50];
-  char data_format[] = "%f, %f, %hu, %f, %f, %f";
+  char buffer[30];
+  char data_format[] = "%f,%f,%hu,%f,%f,%f";
   sprintf(buffer, data_format, AccXangle, AccYangle, tof_data, bmp.temperature, bmp.pressure, bmp.readAltitude(SEALEVELPRESSURE_HPA));
-
-  // Serial.println(buffer); // Printing to serial for testing
 
   LoRa.beginPacket();
   LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
   LoRa.print(buffer);
   LoRa.endPacket();
 
-  delay(20);
+  // delay(20);
   
   }
