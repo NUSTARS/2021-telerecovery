@@ -1,10 +1,4 @@
-/*
-  Adapted from
-  ...\heltec_wifi_lora_32_V2\Heltec ESP32 Dev-Boards\examples\LoRa\OLED_LoRa_Sender\OLED_LoRa_Sender.ino
-*/
-
 #include "transmitter.h"
-
 
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X();
 Adafruit_BMP3XX bmp; 
@@ -29,7 +23,7 @@ void setup(){
     true /*PABOOST Enable*/, 
     BAND /*long BAND*/);
  
-  delay(1500); // Maybe do not need this or can be shorter?
+  delay(1000); // Maybe do not need this or can be shorter?
 
   // Initialize time of flight sensor
   if (!ToF.begin()) {
@@ -44,9 +38,7 @@ void setup(){
   Serial.begin(115200); // init serial for testing
   delay(500);
 
-   if (!bmp.begin_I2C()) {   // hardware I2C mode, can pass in address & alt Wire
-  //if (! bmp.begin_SPI(BMP_CS)) {  // hardware SPI mode  
-  //if (! bmp.begin_SPI(BMP_CS, BMP_SCK, BMP_MISO, BMP_MOSI)) {  // software SPI mode
+   if (!bmp.begin_I2C()) {
     Serial.println("Could not find a valid BMP3 sensor, check wiring!");
     while (1);
   }
@@ -77,7 +69,7 @@ void loop(){
   AccYangle = (float) (atan2(accRaw[2],accRaw[0])+M_PI)*RAD_TO_DEG;
 
   //If IMU is up the correct way, use these lines
-        AccXangle -= (float)180.0;
+  AccXangle -= (float)180.0;
   if (AccYangle > 90)
           AccYangle -= (float)270;
   else
@@ -99,7 +91,6 @@ void loop(){
   Serial.print(", Ay=");
   Serial.print(AccYangle);
   Serial.print(", ToF=");
-
 
   if (ToF_flag){
     Serial.print(val.RangeMilliMeter);
