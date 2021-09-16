@@ -70,12 +70,6 @@ void enableIMU()
   writeTo(LIS3MDL_ADDRESS, LIS3MDL_CTRL_REG3, 0b00000000); // Continuous-conversion mode
   // readFrom(LSM6DSL_ADDRESS, LIS3MDL_CTRL_REG3, 1, temp);
 
-  // initialize pressure/temperature sensor
-  bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
-  bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
-  bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
-  bmp.setOutputDataRate(BMP3_ODR_50_HZ);
-  
 }
 
 void readACC(unsigned char buff[])

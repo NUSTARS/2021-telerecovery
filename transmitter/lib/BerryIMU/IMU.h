@@ -4,9 +4,6 @@
 #include "LIS3MDL.h"
 #include "BMP388.h"
 #include <Adafruit_Sensor.h>
-#include "Adafruit_BMP3XX.h"
-
-extern Adafruit_BMP3XX bmp; 
 
 void detectIMU();
 void enableIMU();

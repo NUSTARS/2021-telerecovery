@@ -3,19 +3,7 @@
   ...\heltec_wifi_lora_32_V2\Heltec ESP32 Dev-Boards\examples\LoRa\OLED_LoRa_Sender\OLED_LoRa_Sender.ino
 */
 
-#include <Arduino.h>
-#include "heltec.h"
-#include "ToF.h"
-#include "IMU.h"
-
-#define BAND 915E6  // You can set band here directly,e.g. 868E6,915E6
-#define SEALEVELPRESSURE_HPA (1013.25)
-
-#ifndef M_PI
-  #define M_PI 3.141592653589793
-#endif
-
-#define DT  0.02          // Loop time
+#include "transmitter.h"
 
 
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X();
@@ -56,9 +44,27 @@ void setup(){
   Serial.begin(115200); // init serial for testing
   delay(500);
 
+   if (!bmp.begin_I2C()) {   // hardware I2C mode, can pass in address & alt Wire
+  //if (! bmp.begin_SPI(BMP_CS)) {  // hardware SPI mode  
+  //if (! bmp.begin_SPI(BMP_CS, BMP_SCK, BMP_MISO, BMP_MOSI)) {  // software SPI mode
+    Serial.println("Could not find a valid BMP3 sensor, check wiring!");
+    while (1);
+  }
+
+  // Set up oversampling and filter initialization
+  bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
+  bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
+  bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
+  bmp.setOutputDataRate(BMP3_ODR_50_HZ);
+
 }
 
 void loop(){
+
+  if (! bmp.performReading()) {
+    Serial.println("Failed to perform reading :(");
+    return;
+  }
 
   //Read the measurements from  sensors
   readACC(buff);
@@ -88,32 +94,33 @@ void loop(){
     ToF_flag = false;
   }
 
-  Serial.print("AccX=");
+  Serial.print("Ax=");
   Serial.print(AccXangle);
-  Serial.print("\tAccY=");
+  Serial.print(", Ay=");
   Serial.print(AccYangle);
-  Serial.print("\tDistance=");
+  Serial.print(", ToF=");
 
 
   if (ToF_flag){
-    Serial.println(val.RangeMilliMeter);
+    Serial.print(val.RangeMilliMeter);
+    Serial.print(" mm");
   }
   else{
-    Serial.println("?");
+    Serial.print("?");
   }
 
-  //  Serial.print("Temperature = ");
-  // Serial.print(bmp.temperature);
-  // Serial.println(" *C");
+  Serial.print(", Temp=");
+  Serial.print(bmp.temperature);
+  Serial.print(" *C");
 
-  // Serial.print("Pressure = ");
-  // Serial.print(bmp.pressure / 100.0);
-  // Serial.println(" hPa");
+  Serial.print(", Pressure=");
+  Serial.print(bmp.pressure / 100.0);
+  Serial.print(" hPa");
 
-  // Serial.print("Approx. Altitude = ");
-  // Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
-  // Serial.println(" m");
-  // delay(250);
+  Serial.print(", Altitude=");
+  Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
+  Serial.println(" m");
+  delay(DT);
 
 
   // // Send packet
