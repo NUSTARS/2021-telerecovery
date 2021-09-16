@@ -1,7 +1,7 @@
 #include "transmitter.h"
 
-Adafruit_VL53L0X ToF = Adafruit_VL53L0X();
-Adafruit_BMP3XX bmp; 
+Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); // Declare time of flight sensor object
+Adafruit_BMP3XX bmp; // Declare pressure sensor object
 
 unsigned char buff[6];
 int accRaw[3];
@@ -39,11 +39,11 @@ void setup(){
   delay(500);
 
    if (!bmp.begin_I2C()) {
-    Serial.println("Could not find a valid BMP3 sensor, check wiring!");
+    Serial.println("Failed to boot BMP388");
     while (1);
   }
 
-  // Set up oversampling and filter initialization
+  // Set up oversampling and filter initialization on the BMP388
   bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_8X);
   bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
@@ -86,31 +86,18 @@ void loop(){
     ToF_flag = false;
   }
 
-  Serial.print("Ax=");
   Serial.print(AccXangle);
-  Serial.print(", Ay=");
   Serial.print(AccYangle);
-  Serial.print(", ToF=");
-
+  
   if (ToF_flag){
     Serial.print(val.RangeMilliMeter);
-    Serial.print(" mm");
   }
   else{
-    Serial.print("?");
+    Serial.print(0);
   }
-
-  Serial.print(", Temp=");
   Serial.print(bmp.temperature);
-  Serial.print(" *C");
-
-  Serial.print(", Pressure=");
   Serial.print(bmp.pressure / 100.0);
-  Serial.print(" hPa");
-
-  Serial.print(", Altitude=");
   Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
-  Serial.println(" m");
   delay(DT);
 
 
