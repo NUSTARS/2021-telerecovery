@@ -3,28 +3,9 @@
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); // Declare time of flight sensor object
 Adafruit_BMP3XX bmp;                       // Declare pressure sensor object
 
-
-unsigned char buff[6];
-int accRaw[3];
-int gyrRaw[3];
-
-float gyroXangle = 0.0;
-float gyroYangle = 0.0;
-float gyroZangle = 0.0;
-
-float rate_gyr_y = 0.0;   // [deg/s]
-float rate_gyr_x = 0.0;    // [deg/s]
-float rate_gyr_z = 0.0;     // [deg/s]
-
-float AccYangle = 0.0;
-float AccXangle = 0.0;
-
-float CFangleX = 0.0;
-float CFangleY = 0.0;
-
 unsigned long startTime;
-void setup()
-{
+
+void setup() {
 
   // Start ESP32 Board
   Heltec.begin(
@@ -33,15 +14,13 @@ void setup()
       true /*Serial Enable*/,
       true /*PABOOST Enable*/,
       BAND /*long BAND*/);
-
-  delay(500); // Maybe do not need this or can be shorter?
+  delay(500); 
 
   // Initialize time of flight sensor
   if (!ToF.begin()) {
     Serial.println(F("Failed to boot VL53L0X"));
-    while (1);
+    while(1) {;}
   }
-
 
   Serial.begin(115200); // init serial for testing
   delay(500);
@@ -60,7 +39,8 @@ void setup()
   bmp.setPressureOversampling(BMP3_OVERSAMPLING_4X);
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
   bmp.setOutputDataRate(BMP3_ODR_50_HZ);
-}
+
+} // END SETUP
 
 void loop() {
   startTime = millis();
@@ -87,12 +67,10 @@ void loop() {
 
   //If IMU is up the correct way, use these lines
   AccXangle -= (float)180.0;
-  if (AccYangle > 90)
-  {
+  if (AccYangle > 90) {
     AccYangle -= (float)270;
   }
-  else
-  {
+  else {
     AccYangle += (float)90;
   }
 
@@ -127,17 +105,17 @@ void loop() {
   char buffer[128];
   char data_format[] = "%f,%f,%hu,%f,%f,%f,%f,%f,%f,%f,%f\n";
   sprintf(buffer, data_format, 
-  AccXangle,
-  AccYangle,
-  tof_data,
-  bmp.temperature,
-  bmp.pressure,
-  bmp.readAltitude(SEALEVELPRESSURE_HPA),
-  gyroXangle,
-  gyroYangle,
-  gyroZangle,
-  CFangleX,
-  CFangleY);
+    AccXangle,
+    AccYangle,
+    tof_data,
+    bmp.temperature,
+    bmp.pressure,
+    bmp.readAltitude(SEALEVELPRESSURE_HPA),
+    gyroXangle,
+    gyroYangle,
+    gyroZangle,
+    CFangleX,
+    CFangleY);
 
   // Serial.print(buffer);
   LoRa.beginPacket();
@@ -149,4 +127,5 @@ void loop() {
   while(millis() - startTime < (DT*1000)) {
     delay(1);
   }
-}
+
+} // END LOOP
