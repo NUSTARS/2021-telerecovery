@@ -96,7 +96,7 @@ void loop()
   }
 
   // Pack up the data into an array
-  char buffer[30];
+  char buffer[256];
   char data_format[] = "%f,%f,%hu,%f,%f,%f";
   sprintf(buffer, data_format, AccXangle, AccYangle, tof_data, bmp.temperature, bmp.pressure, bmp.readAltitude(SEALEVELPRESSURE_HPA));
 
