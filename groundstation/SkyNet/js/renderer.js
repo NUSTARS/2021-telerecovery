@@ -36,7 +36,7 @@ window.$ = window.jQuery = require('./js/jquery.min.js');
 let port = null;
 serialport.list().then((ports,err) => {
     for (let item of ports) {
-        $('.com').append(`<option>${item.comName}</option>`)
+        $('.com').append(`<option>${item.path}</option>`)
     }
     console.log(ports);
 });
