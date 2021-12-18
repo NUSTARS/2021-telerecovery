@@ -30,6 +30,7 @@ float rate_gyr_z = 0.0; // [deg/s]
 
 float AccYangle = 0.0;
 float AccXangle = 0.0;
+// float AccZangle = 0.0;
 
 float CFangleX = 0.0;
 float CFangleY = 0.0;
