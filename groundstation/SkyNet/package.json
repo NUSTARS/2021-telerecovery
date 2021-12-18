@@ -8,20 +8,18 @@
         "install": "electron-rebuild"
     },
     "keywords": [
-        "Electron",
-        "quick",
-        "start",
-        "tutorial",
-        "demo"
+        "NUSTARS",
+        "Rocket",
+        "Telemetry"
     ],
     "author": "NUSTARS",
     "devDependencies": {
-        "electron": "^13.1.6",
-        "electron-packager": "^15.3.0",
-        "electron-rebuild": "^2.3.5"
+        "electron": "^16.0.5",
+        "electron-packager": "^15.4.0",
+        "electron-rebuild": "^3.2.5"
     },
     "dependencies": {
-        "serialport": "^9.2.0",
-        "tableify": "^0.0.3"
+        "serialport": "^9.2.8",
+        "tableify": "^1.1.1"
     }
 }
