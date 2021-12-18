@@ -28,7 +28,7 @@
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="24" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="21" name="tPlace" color="0" fill="1" visible="yes" active="yes"/>
 <layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
@@ -190,6 +190,8 @@
 <wire x1="100" y1="0" x2="100" y2="40" width="0" layer="20"/>
 <wire x1="100" y1="40" x2="0" y2="40" width="0" layer="20"/>
 <wire x1="0" y1="40" x2="0" y2="0" width="0" layer="20"/>
+<text x="73.66" y="29.21" size="2.54" layer="21">NUSTARS 
+SkyNet V1</text>
 </plain>
 <libraries>
 <library name="telemetry_module">
@@ -782,35 +784,35 @@ design rules under a new name.</description>
 <contactref element="U$2" pad="3"/>
 <contactref element="U$1" pad="2"/>
 <contactref element="U1" pad="P$9"/>
-<wire x1="70.612" y1="5.842" x2="72.39" y2="7.62" width="0.2" layer="1"/>
-<wire x1="72.39" y1="7.62" x2="69.85" y2="10.16" width="0.2" layer="1"/>
-<wire x1="69.85" y1="10.16" x2="69.85" y2="20.32" width="0.2" layer="1"/>
-<wire x1="26.67" y1="7.62" x2="29.21" y2="10.16" width="0.2" layer="1"/>
+<wire x1="70.612" y1="5.842" x2="72.39" y2="7.62" width="0.2032" layer="1"/>
+<wire x1="72.39" y1="7.62" x2="69.85" y2="10.16" width="0.2032" layer="1"/>
+<wire x1="69.85" y1="10.16" x2="69.85" y2="20.32" width="0.2032" layer="1"/>
+<wire x1="26.67" y1="7.62" x2="29.21" y2="10.16" width="0.2032" layer="1"/>
 <wire x1="69.85" y1="5.08" x2="70.612" y2="5.842" width="0.2032" layer="1"/>
-<wire x1="29.21" y1="10.16" x2="59.69" y2="10.16" width="0.2" layer="1"/>
-<wire x1="59.69" y1="10.16" x2="64.77" y2="5.08" width="0.2" layer="1"/>
-<wire x1="64.77" y1="5.08" x2="69.85" y2="5.08" width="0.2" layer="1"/>
+<wire x1="29.21" y1="10.16" x2="59.69" y2="10.16" width="0.2032" layer="1"/>
+<wire x1="59.69" y1="10.16" x2="64.77" y2="5.08" width="0.2032" layer="1"/>
+<wire x1="64.77" y1="5.08" x2="69.85" y2="5.08" width="0.2032" layer="1"/>
 </signal>
 <signal name="SDA">
 <contactref element="U$2" pad="4"/>
 <contactref element="U$1" pad="3"/>
 <contactref element="U1" pad="P$19"/>
-<wire x1="74.93" y1="7.62" x2="72.39" y2="10.16" width="0.2" layer="1"/>
-<wire x1="72.39" y1="10.16" x2="72.39" y2="20.32" width="0.2" layer="1"/>
-<wire x1="72.39" y1="20.32" x2="62.23" y2="30.48" width="0.2" layer="1"/>
-<wire x1="62.23" y1="30.48" x2="49.53" y2="30.48" width="0.2" layer="1"/>
+<wire x1="74.93" y1="7.62" x2="72.39" y2="10.16" width="0.2032" layer="1"/>
+<wire x1="72.39" y1="10.16" x2="72.39" y2="20.32" width="0.2032" layer="1"/>
+<wire x1="72.39" y1="20.32" x2="62.23" y2="30.48" width="0.2032" layer="1"/>
+<wire x1="62.23" y1="30.48" x2="49.53" y2="30.48" width="0.2032" layer="1"/>
 </signal>
 <signal name="+5V">
 <contactref element="U1" pad="P$2"/>
 <contactref element="U$2" pad="1"/>
 <contactref element="U$1" pad="1"/>
-<wire x1="62.6174" y1="12.3126" x2="11.0644125" y2="12.3126" width="0.2" layer="1"/>
-<wire x1="62.6174" y1="12.3126" x2="67.31" y2="7.62" width="0.2" layer="1"/>
-<wire x1="11.0644125" y1="12.3126" x2="8.89" y2="10.1381875" width="0.2" layer="1"/>
-<wire x1="8.89" y1="7.62" x2="8.89" y2="10.1381875" width="0.2" layer="1"/>
-<wire x1="68.58" y1="19.05" x2="67.31" y2="20.32" width="0.2" layer="1"/>
-<wire x1="68.58" y1="19.05" x2="68.58" y2="8.89" width="0.2" layer="1"/>
-<wire x1="67.31" y1="7.62" x2="68.58" y2="8.89" width="0.2" layer="1"/>
+<wire x1="62.6174" y1="12.3126" x2="11.0644125" y2="12.3126" width="0.2032" layer="1"/>
+<wire x1="62.6174" y1="12.3126" x2="67.31" y2="7.62" width="0.2032" layer="1"/>
+<wire x1="11.0644125" y1="12.3126" x2="8.89" y2="10.1381875" width="0.2032" layer="1"/>
+<wire x1="8.89" y1="7.62" x2="8.89" y2="10.1381875" width="0.2032" layer="1"/>
+<wire x1="68.58" y1="19.05" x2="67.31" y2="20.32" width="0.2032" layer="1"/>
+<wire x1="68.58" y1="19.05" x2="68.58" y2="8.89" width="0.2032" layer="1"/>
+<wire x1="67.31" y1="7.62" x2="68.58" y2="8.89" width="0.2032" layer="1"/>
 </signal>
 </signals>
 <mfgpreviewcolors>
@@ -822,4 +824,10 @@ design rules under a new name.</description>
 </mfgpreviewcolors>
 </board>
 </drawing>
+<compatibility>
+<note version="6.3" minversion="6.2.2" severity="warning">
+Since Version 6.2.2 text objects can contain more than one line,
+which will not be processed correctly with this version.
+</note>
+</compatibility>
 </eagle>

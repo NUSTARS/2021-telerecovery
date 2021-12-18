@@ -10,7 +10,7 @@ void setup() {
   // Start ESP32 Board
   Heltec.begin(
       false /*DisplayEnable Enable*/,
-      true /*Heltec.Heltec.Heltec.LoRa Disable*/,
+      true /*LoRa enable*/,
       true /*Serial Enable*/,
       true /*PABOOST Enable*/,
       BAND /*long BAND*/);
@@ -42,6 +42,10 @@ void setup() {
 
 } // END SETUP
 
+
+
+
+
 void loop() {
   startTime = millis();
 
@@ -61,17 +65,20 @@ void loop() {
   gyrRaw[1] = (int)(buff[2] | (buff[3] << 8));
   gyrRaw[2] = (int)(buff[4] | (buff[5] << 8));
 
-  //Convert Accelerometer values to degrees
+  // Convert Accelerometer values to degrees
+  // Each angle is arctan of the quotient of the other two plus pi, then multiply by RAD_TO_DEG
+  // e.g. AccZangle = ( arctan(y/x) + pi )
   AccXangle = (float)(atan2(accRaw[1], accRaw[2]) + M_PI) * RAD_TO_DEG;
   AccYangle = (float)(atan2(accRaw[2], accRaw[0]) + M_PI) * RAD_TO_DEG;
+  // AccZangle = (float)(atan2(accRaw[1], accRaw[0]) + M_PI) * RAD_TO_DEG;
 
-  //If IMU is up the correct way, use these lines
-  AccXangle -= (float)180.0;
-  if (AccYangle > 90) {
-    AccYangle -= (float)270;
+  // If IMU is up the correct way, use these lines
+  AccXangle -= 180.0;
+  if (AccYangle > 90.0) {
+    AccYangle -= 270.0;
   }
   else {
-    AccYangle += (float)90;
+    AccYangle += 90.0;
   }
 
   //Convert Gyro raw to degrees per second
@@ -102,7 +109,7 @@ void loop() {
   }
 
   // Pack up the data into an array
-  char buffer[128];
+  char buffer[256];
   char data_format[] = "%f,%f,%hu,%f,%f,%f,%f,%f,%f,%f,%f\n";
   sprintf(buffer, data_format, 
     AccXangle,
@@ -117,7 +124,8 @@ void loop() {
     CFangleX,
     CFangleY);
 
-  // Serial.print(buffer);
+
+  Serial.print(buffer);
   LoRa.beginPacket();
   LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
   LoRa.print(buffer);
