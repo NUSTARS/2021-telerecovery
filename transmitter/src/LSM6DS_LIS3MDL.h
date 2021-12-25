@@ -1,7 +1,7 @@
 #include <Adafruit_LIS3MDL.h>
 Adafruit_LIS3MDL lis3mdl;
 
-// Can change this to be LSM6DS33 or whatever ya like
+// Can change this to be LSM6DSOX or whatever ya like
 #include <Adafruit_LSM6DS33.h>
 Adafruit_LSM6DS33 lsm6ds;
 
