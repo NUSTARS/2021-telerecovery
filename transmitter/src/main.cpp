@@ -26,8 +26,8 @@ unsigned long startTime; // time for loop
 int loopcount = 0;
 
 // function prototypes
-uint16_t crc16_update(uint16_t crc, uint8_t a);
-void receiveCalibration();
+// uint16_t crc16_update(uint16_t crc, uint8_t a);
+// void receiveCalibration();
 
 
 
@@ -121,24 +121,9 @@ void loop() {
   gyroscope->getEvent(&gyro_event);
   accelerometer->getEvent(&accel_event);
   
-  // // 'Raw' values to match expectation of MotionCal
-  // Serial.print("Raw:");
-  // Serial.print(int(accel_event.acceleration.x*8192/9.8)); Serial.print(",");
-  // Serial.print(int(accel_event.acceleration.y*8192/9.8)); Serial.print(",");
-  // Serial.print(int(accel_event.acceleration.z*8192/9.8)); Serial.print(",");
-  // Serial.print(int(gyro_event.gyro.x*SENSORS_RADS_TO_DPS*16)); Serial.print(",");
-  // Serial.print(int(gyro_event.gyro.y*SENSORS_RADS_TO_DPS*16)); Serial.print(",");
-  // Serial.print(int(gyro_event.gyro.z*SENSORS_RADS_TO_DPS*16)); Serial.print(",");
-  // Serial.print(int(mag_event.magnetic.x*10)); Serial.print(",");
-  // Serial.print(int(mag_event.magnetic.y*10)); Serial.print(",");
-  // Serial.print(int(mag_event.magnetic.z*10)); Serial.println("");
-
-  // unified data
-  // Serial.print("Uni:");
-
   // Pack up the data into an array
   char buffer[512];
-  char data_format[] = "ToF=%hu,T=%f,P=%f,Alt=%f\na_x%f,a_y%f,a_z%f\ng_x%f,g_y%f,g_z=%f\nm_x=%f,m_y=%f,m_z=%f\n\n";
+  char data_format[] = "ToF=%hu,T=%f,P=%f,Alt=%f,a_x%f,a_y%f,a_z%f,g_x%f,g_y%f,g_z=%f,m_x=%f,m_y=%f,m_z=%f\n";
 
   sprintf(buffer,data_format,
     tof_data,
@@ -156,19 +141,10 @@ void loop() {
     mag_event.magnetic.z
   );
 
-  Serial.print(buffer);
+  // Serial.print(buffer);
 
-  // Serial.print(accel_event.acceleration.x); Serial.print(",");
-  // Serial.print(accel_event.acceleration.y); Serial.print(",");
-  // Serial.print(accel_event.acceleration.z); Serial.print(",");
-  // Serial.print(gyro_event.gyro.x, 4); Serial.print(",");
-  // Serial.print(gyro_event.gyro.y, 4); Serial.print(",");
-  // Serial.print(gyro_event.gyro.z, 4); Serial.print(",");
-  // Serial.print(mag_event.magnetic.x); Serial.print(",");
-  // Serial.print(mag_event.magnetic.y); Serial.print(",");
-  // Serial.print(mag_event.magnetic.z); Serial.println("");
   loopcount++;
-  receiveCalibration();
+  // receiveCalibration();
 
   // // occasionally print calibration
   // if (loopcount == 50 || loopcount > 100) {
@@ -198,118 +174,118 @@ void loop() {
   //   loopcount = 0;
   // }
 
-  // LoRa.beginPacket();
-  // LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
-  // LoRa.print(buffer);
-  // LoRa.endPacket();
+  LoRa.beginPacket();
+  LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
+  LoRa.print(buffer);
+  LoRa.endPacket();
 
   //Each loop should be at least 20ms.
   while(millis() - startTime < (DT*1000)) {
     delay(1);
   }
  
-  delay(10); 
+  // delay(10); 
 
 } // END LOOP
 
 /********************************************************/
 
-byte caldata[68]; // buffer to receive magnetic calibration data
-byte calcount=0;
+// byte caldata[68]; // buffer to receive magnetic calibration data
+// byte calcount=0;
 
-void receiveCalibration() {
-  uint16_t crc;
-  byte b, i;
+// void receiveCalibration() {
+//   uint16_t crc;
+//   byte b, i;
 
-  while (Serial.available()) {
-    b = Serial.read();
-    if (calcount == 0 && b != 117) {
-      // first byte must be 117
-      return;
-    }
-    if (calcount == 1 && b != 84) {
-      // second byte must be 84
-      calcount = 0;
-      return;
-    }
-    // store this byte
-    caldata[calcount++] = b;
-    if (calcount < 68) {
-      // full calibration message is 68 bytes
-      return;
-    }
-    // verify the crc16 check
-    crc = 0xFFFF;
-    for (i=0; i < 68; i++) {
-      crc = crc16_update(crc, caldata[i]);
-    }
-    if (crc == 0) {
-      // data looks good, use it
-      float offsets[16];
-      memcpy(offsets, caldata+2, 16*4);
-      cal.accel_zerog[0] = offsets[0];
-      cal.accel_zerog[1] = offsets[1];
-      cal.accel_zerog[2] = offsets[2];
+//   while (Serial.available()) {
+//     b = Serial.read();
+//     if (calcount == 0 && b != 117) {
+//       // first byte must be 117
+//       return;
+//     }
+//     if (calcount == 1 && b != 84) {
+//       // second byte must be 84
+//       calcount = 0;
+//       return;
+//     }
+//     // store this byte
+//     caldata[calcount++] = b;
+//     if (calcount < 68) {
+//       // full calibration message is 68 bytes
+//       return;
+//     }
+//     // verify the crc16 check
+//     crc = 0xFFFF;
+//     for (i=0; i < 68; i++) {
+//       crc = crc16_update(crc, caldata[i]);
+//     }
+//     if (crc == 0) {
+//       // data looks good, use it
+//       float offsets[16];
+//       memcpy(offsets, caldata+2, 16*4);
+//       cal.accel_zerog[0] = offsets[0];
+//       cal.accel_zerog[1] = offsets[1];
+//       cal.accel_zerog[2] = offsets[2];
       
-      cal.gyro_zerorate[0] = offsets[3];
-      cal.gyro_zerorate[1] = offsets[4];
-      cal.gyro_zerorate[2] = offsets[5];
+//       cal.gyro_zerorate[0] = offsets[3];
+//       cal.gyro_zerorate[1] = offsets[4];
+//       cal.gyro_zerorate[2] = offsets[5];
       
-      cal.mag_hardiron[0] = offsets[6];
-      cal.mag_hardiron[1] = offsets[7];
-      cal.mag_hardiron[2] = offsets[8];
+//       cal.mag_hardiron[0] = offsets[6];
+//       cal.mag_hardiron[1] = offsets[7];
+//       cal.mag_hardiron[2] = offsets[8];
 
-      cal.mag_field = offsets[9];
+//       cal.mag_field = offsets[9];
       
-      cal.mag_softiron[0] = offsets[10];
-      cal.mag_softiron[1] = offsets[13];
-      cal.mag_softiron[2] = offsets[14];
-      cal.mag_softiron[3] = offsets[13];
-      cal.mag_softiron[4] = offsets[11];
-      cal.mag_softiron[5] = offsets[15];
-      cal.mag_softiron[6] = offsets[14];
-      cal.mag_softiron[7] = offsets[15];
-      cal.mag_softiron[8] = offsets[12];
+//       cal.mag_softiron[0] = offsets[10];
+//       cal.mag_softiron[1] = offsets[13];
+//       cal.mag_softiron[2] = offsets[14];
+//       cal.mag_softiron[3] = offsets[13];
+//       cal.mag_softiron[4] = offsets[11];
+//       cal.mag_softiron[5] = offsets[15];
+//       cal.mag_softiron[6] = offsets[14];
+//       cal.mag_softiron[7] = offsets[15];
+//       cal.mag_softiron[8] = offsets[12];
 
-      if (! cal.saveCalibration()) {
-        Serial.println("**WARNING** Couldn't save calibration");
-      } else {
-        Serial.println("Wrote calibration");    
-      }
-      cal.printSavedCalibration();
-      calcount = 0;
-      return;
-    }
-    // look for the 117,84 in the data, before discarding
-    for (i=2; i < 67; i++) {
-      if (caldata[i] == 117 && caldata[i+1] == 84) {
-        // found possible start within data
-        calcount = 68 - i;
-        memmove(caldata, caldata + i, calcount);
-        return;
-      }
-    }
-    // look for 117 in last byte
-    if (caldata[67] == 117) {
-      caldata[0] = 117;
-      calcount = 1;
-    } else {
-      calcount = 0;
-    }
-  }
-}
+//       if (! cal.saveCalibration()) {
+//         Serial.println("**WARNING** Couldn't save calibration");
+//       } else {
+//         Serial.println("Wrote calibration");    
+//       }
+//       cal.printSavedCalibration();
+//       calcount = 0;
+//       return;
+//     }
+//     // look for the 117,84 in the data, before discarding
+//     for (i=2; i < 67; i++) {
+//       if (caldata[i] == 117 && caldata[i+1] == 84) {
+//         // found possible start within data
+//         calcount = 68 - i;
+//         memmove(caldata, caldata + i, calcount);
+//         return;
+//       }
+//     }
+//     // look for 117 in last byte
+//     if (caldata[67] == 117) {
+//       caldata[0] = 117;
+//       calcount = 1;
+//     } else {
+//       calcount = 0;
+//     }
+//   }
+// }
 
 
-uint16_t crc16_update(uint16_t crc, uint8_t a)
-{
-  int i;
-  crc ^= a;
-  for (i = 0; i < 8; i++) {
-    if (crc & 1) {
-      crc = (crc >> 1) ^ 0xA001;
-    } else {
-      crc = (crc >> 1);
-    }
-  }
-  return crc;
-}
+// uint16_t crc16_update(uint16_t crc, uint8_t a)
+// {
+//   int i;
+//   crc ^= a;
+//   for (i = 0; i < 8; i++) {
+//     if (crc & 1) {
+//       crc = (crc >> 1) ^ 0xA001;
+//     } else {
+//       crc = (crc >> 1);
+//     }
+//   }
+//   return crc;
+// }
