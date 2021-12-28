@@ -25,12 +25,6 @@ sensors_event_t mag_event, gyro_event, accel_event;
 unsigned long startTime; // time for loop
 int loopcount = 0;
 
-// function prototypes
-// uint16_t crc16_update(uint16_t crc, uint8_t a);
-// void receiveCalibration();
-
-
-
 void setup(void) {
 
   // Start ESP32 Board
@@ -123,7 +117,7 @@ void loop() {
   
   // Pack up the data into an array
   char buffer[512];
-  char data_format[] = "%hu,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n";
+  char data_format[] = "%hu,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f";
 
   sprintf(buffer,data_format,
     tof_data,
@@ -153,6 +147,4 @@ void loop() {
     delay(1);
   }
  
-  // delay(10); 
-
 } // END LOOP
