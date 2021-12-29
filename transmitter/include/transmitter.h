@@ -1,4 +1,6 @@
+// Project header file which includes important headers and defines some constants
 #include <Arduino.h>
+#include <Adafruit_Sensor_Calibration.h>
 #include "heltec.h"
 #include "ToF.h"
 #include "IMU.h"

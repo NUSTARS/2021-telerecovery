@@ -1,11 +1,11 @@
-#include <Adafruit_Sensor_Calibration.h>
+// Adapted from calibration example in Adafruit_AHRS library
+
 #include "transmitter.h"
+
 Adafruit_Sensor *accelerometer, *gyroscope, *magnetometer; // IMU
 
-// uncomment one combo 9-DoF!
-#include "LSM6DS_LIS3MDL.h"  // see the the LSM6DS_LIS3MDL file in this project to change board to LSM6DS33, LSM6DS3U, LSM6DSOX, etc
-//#include "LSM9DS.h"           // LSM9DS1 or LSM9DS0
-//#include "NXP_FXOS_FXAS.h"  // NXP 9-DoF breakout
+// see the the LSM6DS_LIS3MDL file in this project to change board to LSM6DS33, LSM6DS3U, LSM6DSOX, etc
+#include "LSM6DS_LIS3MDL.h"  
 
 // select either EEPROM or SPI FLASH storage:
 #ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
@@ -25,16 +25,17 @@ sensors_event_t mag_event, gyro_event, accel_event;
 unsigned long startTime; // time for loop
 int loopcount = 0;
 
+/*--------------------------------------------------*/
 void setup(void) {
 
-  // Start ESP32 Board
+  // Start Heltec LoRa ESP32 Board
   Heltec.begin(
       false /*DisplayEnable Enable*/,
       true /*LoRa enable*/,
       true /*Serial Enable*/,
       true /*PABOOST Enable*/,
       BAND /*long BAND*/);
-  delay(500); 
+  delay(500); // wait for board to be initialized
 
   Serial.begin(115200); // init serial for testings
   while (!Serial) delay(10);  
@@ -57,23 +58,24 @@ void setup(void) {
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
   bmp.setOutputDataRate(BMP3_ODR_50_HZ);
 
+  // Uncomment Serial.print statements for debugging 
 
   // Initialize calibration helper code
   if (!cal.begin()) {
-    Serial.println("Failed to initialize calibration helper");
+    // Serial.println("Failed to initialize calibration helper");
     while (1) yield();
   }
 
   // Load existing calibration from EEPROM if its there, or use default
   if (! cal.loadCalibration()) {
-    Serial.println("No calibration loaded/found... will start with defaults");
+    // Serial.println("No calibration loaded/found... will start with defaults");
   } else {
-    Serial.println("Loaded existing calibration");
+    // Serial.println("Loaded existing calibration");
   }
 
   // Initialize IMU sensors
   if (!init_sensors()) {
-    Serial.println("Failed to find sensors");
+    // Serial.println("Failed to find sensors");
     while (1) delay(10);
   }
 
@@ -92,12 +94,12 @@ void loop() {
 
   startTime = millis();
 
-  // Read pressure sensor reading 
+  // Read pressure sensor (float)
   if (!bmp.performReading()) {
     return;
   }
 
-  // Read time of flight sensor data
+  // Read time of flight sensor (unsigned short)
   VL53L0X_RangingMeasurementData_t val = read_ToF(ToF);
   uint16_t tof_data=0;
   if (val.RangeStatus != 4)
@@ -106,11 +108,11 @@ void loop() {
   }
   else
   {
+    // if data is bad (probably nothing in range) set equal to zero
     tof_data = 0;
   }
 
-
-  // Read IMU data
+  // Read IMU data (all floats)
   magnetometer->getEvent(&mag_event);
   gyroscope->getEvent(&gyro_event);
   accelerometer->getEvent(&accel_event);
@@ -135,14 +137,13 @@ void loop() {
     mag_event.magnetic.z
   );
 
-  // Serial.print(buffer);
-
+  // Send data buffer with LoRa
   LoRa.beginPacket();
   LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
   LoRa.print(buffer);
   LoRa.endPacket();
 
-  //Each loop should be at least 20ms.
+  // Each loop should be at least 20ms.
   while(millis() - startTime < (DT*1000)) {
     delay(1);
   }
