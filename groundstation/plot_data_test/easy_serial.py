@@ -1,7 +1,4 @@
 '''
-TODO: 
-    - Refactor using classes instead?
-
 easy_serial uses the PySerial library to create some useful functions
 that make serial communication with python very easy. 
 

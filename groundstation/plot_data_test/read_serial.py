@@ -1,3 +1,13 @@
+'''
+I used this code for debugging the format of the data sent over LoRa. I'm including it
+since it might be useful for debugging/testing stuff for the groundstation stuff.
+
+This script will read data over serial from the reciever LoRa board. It then writes that 
+data to a file called data.txt in the directory the script is run. 
+
+'''
+
+
 import easy_serial as es
 import time
 import numpy as np
@@ -5,8 +15,6 @@ import datetime
 
 S = es.openSerialPort(baudrate=115200,board='heltec-esp32')
 
-# arr = []
-t0 = time.time()
 with open('./data.txt','w+') as of:
     n = 1
     while True:
