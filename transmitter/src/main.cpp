@@ -145,7 +145,7 @@ void loop() {
 
   // Each loop should be at least 20ms.
   while(millis() - startTime < (DT*1000)) {
-    delay(1);
+    // wait
   }
  
 } // END LOOP
