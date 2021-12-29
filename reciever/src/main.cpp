@@ -20,14 +20,15 @@ void setup() {
     true /*PABOOST Enable*/, 
     BAND /*long BAND*/);
 
-  OLED_init();
+  OLED_init(); // Initialize the OLED screen
 
-  LoRa.receive();
+  LoRa.receive(); // Initialize LoRa for recieving
 }
 
 int count = 0;
 
 void loop() {
+
   char msg[50];
 
   int packetSize = LoRa.parsePacket();
@@ -35,7 +36,7 @@ void loop() {
   if (packetSize){
     OLED_clear();
 
-    cbk(packetSize);
+    cbk(packetSize); // recieve and print recieved packet
 
     count ++;
     sprintf(msg,"Packet received: %d",count);
