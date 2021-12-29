@@ -137,8 +137,6 @@ void loop() {
     mag_event.magnetic.z
   );
 
-  Serial.print(buffer);
-
   // Send data buffer with LoRa
   LoRa.beginPacket();
   LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
