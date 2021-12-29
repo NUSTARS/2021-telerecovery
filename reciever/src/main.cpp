@@ -2,9 +2,11 @@
   Adapted from .pio\libdeps\heltec_wifi_lora_32_V2\\examples\LoRa\OLED_LoRa_Reciever.ino
 */
 
+// #include "reciever.h"
 #include <Arduino.h>
 #include "OLED.h"
 #include "LoRa_RX.h"
+#define DT  0.02
 
 String rssi = "RSSI --";
 String packSize = "--";
@@ -26,8 +28,11 @@ void setup() {
 }
 
 int count = 0;
+unsigned long startTime;
 
 void loop() {
+
+  startTime = millis();
 
   char msg[50];
 
@@ -43,5 +48,9 @@ void loop() {
     OLED_print(0,26,MAX_SCREEN_WIDTH,msg);
   }
 
-  delay(20);
+  // Each loop should be at least 20ms.
+  while(millis() - startTime < (DT*1000)) {
+    // wait
+  }
+  
 }
