@@ -94,6 +94,7 @@ $('.btn-submit').click((data) => {
     });
     $('.receiver-connected').css("display", "");
 });
+
 // Click to send message
 $('.btn-send').click(() => {
     var sendData = $('.input-send-data').val();
@@ -112,3 +113,21 @@ document.getElementById('checkupdate').addEventListener("click", displayVersion)
 function displayVersion() {
   alert("You are running the latest version of SkyNet.");
 }
+
+// For todays date;
+Date.prototype.today = function () { 
+  return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
+}
+
+// For the time now
+Date.prototype.timeNow = function () {
+   return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds();
+}
+
+// Set a timeout that will update clocks every second.
+// This timeout reschedules itself.
+setInterval(function updateClocks() {
+  const now = new Date();
+  $('.local-time-display').text(now.toLocaleString('en-US', { hour12: false }));
+  $('.utc-time-display').text(`${now.getUTCMonth() + 1}/${now.getUTCDate()}/${now.getUTCFullYear()}, ${now.getUTCHours()}:${now.getUTCMinutes()}:${now.getUTCSeconds()}`);
+}, 1000);
