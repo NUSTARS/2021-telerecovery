@@ -7,7 +7,7 @@ const tableify = require('tableify')
 
 async function listSerialPorts() {
   await serialport.list().then((ports, err) => {
-    if (err) {
+    if(err) {
       document.getElementById('error').textContent = err.message
       return
     } else {
@@ -34,44 +34,42 @@ setTimeout(function listPorts() {
 // Serial Window
 window.$ = window.jQuery = require('./js/jquery.min.js');
 let port = null;
-serialport.list().then((ports, err) => {
-  for (let item of ports) {
-    $('.com').append(`<option>${item.path}</option>`)
-  }
-  console.log(ports);
+serialport.list().then((ports,err) => {
+    for (let item of ports) {
+        $('.com').append(`<option>${item.path}</option>`)
+    }
+    console.log(ports);
 });
 $('.btn-submit').click((data) => {
-  let COM = $('select option:selected').text();
-  let BaudRate = $('#BaudRate').val();
-  console.log(COM);
-  console.log(BaudRate);
-  port = new serialport(COM, {
-    baudRate: parseInt(BaudRate)
-  });
-  $('.receive-windows').text(`Opening: ${COM}, Using Baud Rate: ${BaudRate}`);
-  $('.receive-windows').append('<br/>=======================================<br/>');
-  port.on('data', data => {
-    let serialData = JSON.parse(data);
-    console.log(`DATA: ${serialData}`);
-    $('.receive-windows').append(serialData.toString());
-  });
+    let COM = $('select option:selected').text();
+    let BaudRate = $('#BaudRate').val();
+    console.log(COM);
+    console.log(BaudRate);
+    port = new serialport(COM, {
+        baudRate: parseInt(BaudRate)
+    });
+    $('.receive-windows').text(`Opening: ${COM}, Using Baud Rate: ${BaudRate}`);
+    $('.receive-windows').append('<br/>=======================================<br/>');
+    port.on('data', data => {
+        console.log(`DATA: ${data}`);
+        $('.receive-windows').append(data.toString());
+    });
 });
 // Click to send message
 $('.btn-send').click(() => {
-  var sendData = $('.input-send-data').val();
-  if (port != {} && port != null) {
-    console.log(`SendData: ${sendData}`);
-    port.write(sendData);
-  }
+    var sendData = $('.input-send-data').val();
+    if (port != {} && port != null) {
+        console.log(`SendData: ${sendData}`);
+        port.write(sendData);
+    }
 })
 // Clear Message
 $('.btn-reset').click(() => {
-  $('.input-send-data').val('');
+    $('.input-send-data').val('');
 })
 
 // Check for Updates Button
 document.getElementById('checkupdate').addEventListener("click", displayVersion);
-
 function displayVersion() {
   alert("You are running the latest version of SkyNet.");
 }

@@ -37,8 +37,8 @@ void loop() {
 
     cbk(packetSize);
 
-    count++;
-    sprintf(msg,"New Packet #%d",count);
+    count ++;
+    sprintf(msg,"Packet received: %d",count);
     OLED_print(0,26,MAX_SCREEN_WIDTH,msg);
   }
 
