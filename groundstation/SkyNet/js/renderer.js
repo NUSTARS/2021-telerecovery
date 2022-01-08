@@ -53,7 +53,8 @@ const dataStringToJSON = (stringData) => {
       "X": stringToArray[10],
       "Y": stringToArray[11],
       "Z": stringToArray[12]
-    }
+    },
+    "RSSI": stringToArray[13]
   });
 }
 
@@ -91,8 +92,8 @@ $('.btn-submit').click((data) => {
           $('.tof-display').text(`Deployed`);
           $(('.tof-card')).removeClass('bg-danger').addClass('bg-success');
         }
+        $('.receiver-connected').css("display", "").text(`RSSI: ${jsonData.RSSI}`);
     });
-    $('.receiver-connected').css("display", "");
 });
 
 // Click to send message
