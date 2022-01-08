@@ -1,8 +1,7 @@
-// Project header file which includes important headers and defines some constants
 #include <Arduino.h>
-#include <Adafruit_Sensor_Calibration.h>
 #include "heltec.h"
 #include "ToF.h"
+#include "IMU.h"
 #include "Adafruit_BMP3XX.h"
 
 #define BAND 915E6  // You can set band here directly,e.g. 868E6,915E6

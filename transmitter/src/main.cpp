@@ -1,44 +1,20 @@
-// Adapted from calibration example in Adafruit_AHRS library
-
 #include "transmitter.h"
 
-Adafruit_Sensor *accelerometer, *gyroscope, *magnetometer; // IMU
+Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); // Declare time of flight sensor object
+Adafruit_BMP3XX bmp;                       // Declare pressure sensor object
 
-// see the the LSM6DS_LIS3MDL file in this project to change board to LSM6DS33, LSM6DS3U, LSM6DSOX, etc
-#include "LSM6DS_LIS3MDL.h"  
+unsigned long startTime;
 
-// select either EEPROM or SPI FLASH storage:
-#ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
-  Adafruit_Sensor_Calibration_EEPROM cal;
-#else
-  Adafruit_Sensor_Calibration_SDFat cal;
-#endif
+void setup() {
 
-
-// Declare sensor objects
-Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); // time of flight
-Adafruit_BMP3XX bmp; // pressure                  
-
-// variables to store IMU data
-sensors_event_t mag_event, gyro_event, accel_event;
-
-unsigned long startTime; // time for loop
-int loopcount = 0;
-
-/*--------------------------------------------------*/
-void setup(void) {
-
-  // Start Heltec LoRa ESP32 Board
+  // Start ESP32 Board
   Heltec.begin(
       false /*DisplayEnable Enable*/,
       true /*LoRa enable*/,
       true /*Serial Enable*/,
       true /*PABOOST Enable*/,
       BAND /*long BAND*/);
-  delay(500); // wait for board to be initialized
-
-  Serial.begin(115200); // init serial for testings
-  while (!Serial) delay(10);  
+  delay(500); 
 
   // Initialize time of flight sensor
   if (!ToF.begin()) {
@@ -46,7 +22,13 @@ void setup(void) {
     while(1) {;}
   }
 
-  // Initialize BMP388 pressure sensor
+  Serial.begin(115200); // init serial for testing
+  delay(500);
+
+  // Initialize the IMU
+  detectIMU();
+  enableIMU();
+
   if (!bmp.begin_I2C()) {
     Serial.println("Failed to boot BMP388");
     while (1);
@@ -58,49 +40,64 @@ void setup(void) {
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_3);
   bmp.setOutputDataRate(BMP3_ODR_50_HZ);
 
-  // Uncomment Serial.print statements for debugging 
+} // END SETUP
 
-  // Initialize calibration helper code
-  if (!cal.begin()) {
-    // Serial.println("Failed to initialize calibration helper");
-    while (1) yield();
-  }
 
-  // Load existing calibration from EEPROM if its there, or use default
-  if (! cal.loadCalibration()) {
-    // Serial.println("No calibration loaded/found... will start with defaults");
-  } else {
-    // Serial.println("Loaded existing calibration");
-  }
 
-  // Initialize IMU sensors
-  if (!init_sensors()) {
-    // Serial.println("Failed to find sensors");
-    while (1) delay(10);
-  }
-
-  // Print out sensor information
-  // accelerometer->printSensorDetails();
-  // gyroscope->printSensorDetails();
-  // magnetometer->printSensorDetails();
-
-  setup_sensors();
-  
-  Wire.setClock(400000); // 400KHz
-}
 
 
 void loop() {
-
   startTime = millis();
 
-  // Read pressure sensor (float)
   if (!bmp.performReading()) {
     return;
   }
 
-  // Read time of flight sensor (unsigned short)
+  // Read raw acceleration data
+  readACC(buff);
+  accRaw[0] = (int)(buff[0] | (buff[1] << 8));
+  accRaw[1] = (int)(buff[2] | (buff[3] << 8));
+  accRaw[2] = (int)(buff[4] | (buff[5] << 8));
+
+  // Read raw gyroscope data
+  readGYR(buff);
+  gyrRaw[0] = (int)(buff[0] | (buff[1] << 8));   
+  gyrRaw[1] = (int)(buff[2] | (buff[3] << 8));
+  gyrRaw[2] = (int)(buff[4] | (buff[5] << 8));
+
+  // Convert Accelerometer values to degrees
+  // Each angle is arctan of the quotient of the other two plus pi, then multiply by RAD_TO_DEG
+  // e.g. AccZangle = ( arctan(y/x) + pi )
+  AccXangle = (float)(atan2(accRaw[1], accRaw[2]) + M_PI) * RAD_TO_DEG;
+  AccYangle = (float)(atan2(accRaw[2], accRaw[0]) + M_PI) * RAD_TO_DEG;
+  // AccZangle = (float)(atan2(accRaw[1], accRaw[0]) + M_PI) * RAD_TO_DEG;
+
+  // If IMU is up the correct way, use these lines
+  AccXangle -= 180.0;
+  if (AccYangle > 90.0) {
+    AccYangle -= 270.0;
+  }
+  else {
+    AccYangle += 90.0;
+  }
+
+  //Convert Gyro raw to degrees per second
+  rate_gyr_x = (float) gyrRaw[0] * G_GAIN;
+  rate_gyr_y = (float) gyrRaw[1]  * G_GAIN;
+  rate_gyr_z = (float) gyrRaw[2]  * G_GAIN;
+
+  //Calculate the angles from the gyro
+  gyroXangle+=rate_gyr_x*DT;
+  gyroYangle+=rate_gyr_y*DT;
+  gyroZangle+=rate_gyr_z*DT;
+
+  //Complementary filter used to combine the accelerometer and gyro values.
+  CFangleX=AA*(CFangleX+rate_gyr_x*DT) +(1 - AA) * AccXangle;
+  CFangleY=AA*(CFangleY+rate_gyr_y*DT) +(1 - AA) * AccYangle;
+
+
   VL53L0X_RangingMeasurementData_t val = read_ToF(ToF);
+
   uint16_t tof_data=0;
   if (val.RangeStatus != 4)
   {
@@ -108,44 +105,35 @@ void loop() {
   }
   else
   {
-    // if data is bad (probably nothing in range) set equal to zero
     tof_data = 0;
   }
 
-  // Read IMU data (all floats)
-  magnetometer->getEvent(&mag_event);
-  gyroscope->getEvent(&gyro_event);
-  accelerometer->getEvent(&accel_event);
-  
   // Pack up the data into an array
-  char buffer[512];
-  char data_format[] = "%hu,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f";
-
-  sprintf(buffer,data_format,
+  char buffer[256];
+  char data_format[] = "%f,%f,%hu,%f,%f,%f,%f,%f,%f,%f,%f\n";
+  sprintf(buffer, data_format, 
+    AccXangle,
+    AccYangle,
     tof_data,
     bmp.temperature,
     bmp.pressure,
     bmp.readAltitude(SEALEVELPRESSURE_HPA),
-    accel_event.acceleration.x,
-    accel_event.acceleration.y,
-    accel_event.acceleration.z,
-    gyro_event.gyro.x,
-    gyro_event.gyro.y,
-    gyro_event.gyro.z,
-    mag_event.magnetic.x,
-    mag_event.magnetic.y,
-    mag_event.magnetic.z
-  );
+    gyroXangle,
+    gyroYangle,
+    gyroZangle,
+    CFangleX,
+    CFangleY);
 
-  // Send data buffer with LoRa
+
+  Serial.print(buffer);
   LoRa.beginPacket();
   LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
   LoRa.print(buffer);
   LoRa.endPacket();
 
-  // Each loop should be at least 20ms.
+  //Each loop should be at least 20ms.
   while(millis() - startTime < (DT*1000)) {
-    // wait
+    delay(1);
   }
- 
+
 } // END LOOP
