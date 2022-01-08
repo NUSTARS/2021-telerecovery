@@ -28,8 +28,35 @@ async function listSerialPorts() {
 // This timeout reschedules itself.
 setTimeout(function listPorts() {
   listSerialPorts();
-  setTimeout(listPorts, 2000);
+  setTimeout(listPorts, 200000);
 }, 2000);
+
+// datatojson
+const dataStringToJSON = (stringData) => {
+  const stringToArray = stringData.replace(/(\r\n|\n|\r)/gm, "").split(",");
+  return JSON.stringify ({
+    "ToF": stringToArray[0],
+    "Temp": stringToArray[1],
+    "Pressure": stringToArray[2],
+    "Altitude": stringToArray[3],
+    "Acceleration": {
+      "X": stringToArray[4],
+      "Y": stringToArray[5],
+      "Z": stringToArray[6]
+    },
+    "Gyro": {
+      "X": stringToArray[7],
+      "Y": stringToArray[8],
+      "Z": stringToArray[9]
+    },
+    "Mag": {
+      "X": stringToArray[10],
+      "Y": stringToArray[11],
+      "Z": stringToArray[12]
+    }
+  });
+}
+
 
 // Serial Window
 window.$ = window.jQuery = require('./js/jquery.min.js');
@@ -51,9 +78,21 @@ $('.btn-submit').click((data) => {
     $('.receive-windows').text(`Opening: ${COM}, Using Baud Rate: ${BaudRate}`);
     $('.receive-windows').append('<br/>=======================================<br/>');
     port.on('data', data => {
-        console.log(`DATA: ${data}`);
+      const jsonData = JSON.parse(dataStringToJSON(data.toString()));
+        console.log(`DATA: ${dataStringToJSON(data.toString())}`);
         $('.receive-windows').append(data.toString());
+        labels.push(labels[labels.length - 1] + 1);
+        updateAccelerationChart(jsonData.Acceleration);
+        updateGyroChart(jsonData.Gyro);
+        updateMagChart(jsonData.Mag);
+        $('.altitude-display').text(`${parseFloat(jsonData.Altitude).toFixed(1)} M`);
+        $('.temp-display').text(`${parseFloat(jsonData.Temp).toFixed(1)} C`);
+        if (jsonData.ToF < 5) {
+          $('.tof-display').text(`Deployed`);
+          $(('.tof-card')).removeClass('bg-danger').addClass('bg-success');
+        }
     });
+    $('.receiver-connected').css("display", "");
 });
 // Click to send message
 $('.btn-send').click(() => {

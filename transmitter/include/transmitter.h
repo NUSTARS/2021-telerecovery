@@ -6,7 +6,7 @@
 #include "Adafruit_BMP3XX.h"
 
 #define BAND 915E6  // You can set band here directly,e.g. 868E6,915E6
-#define SEALEVELPRESSURE_HPA (1013.25)
+#define SEALEVELPRESSURE_HPA (1028)
 
 #define DT  0.02          // Loop time
 #define AA  0.97         // complementary filter constant
