@@ -8,8 +8,9 @@ void OLED_init(void){
   delay(1500);
   Heltec.display->clear();
 
-  Heltec.display->drawString(0, 0, "Initialization success!");
-  Heltec.display->drawString(0, 10, "Waiting for data...");
+  Heltec.display->drawString(0, 0, "SkyNet System Terminal");
+  Heltec.display->drawString(0, 10, "Initialization Success!");
+  Heltec.display->drawString(0, 20, "Waiting for data from core...");
   Heltec.display->display();
 }
 
