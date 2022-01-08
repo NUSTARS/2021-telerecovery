@@ -6,7 +6,7 @@ const accData = {
         backgroundColor: 'rgb(0, 50, 130)',
         borderColor: 'rgb(0, 50, 130)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     },{
@@ -14,7 +14,7 @@ const accData = {
         backgroundColor: 'rgb(150, 50, 130)',
         borderColor: 'rgb(150, 50, 130)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     },{
@@ -22,7 +22,7 @@ const accData = {
         backgroundColor: 'rgb(150, 250, 100)',
         borderColor: 'rgb(150, 250, 100)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     }]
@@ -53,7 +53,7 @@ const gyroData = {
         backgroundColor: 'rgb(0, 50, 130)',
         borderColor: 'rgb(0, 50, 130)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     },{
@@ -61,7 +61,7 @@ const gyroData = {
         backgroundColor: 'rgb(150, 50, 130)',
         borderColor: 'rgb(150, 50, 130)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     },{
@@ -69,7 +69,7 @@ const gyroData = {
         backgroundColor: 'rgb(150, 250, 100)',
         borderColor: 'rgb(150, 250, 100)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     }]
@@ -100,7 +100,7 @@ const magData = {
         backgroundColor: 'rgb(0, 50, 130)',
         borderColor: 'rgb(0, 50, 130)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     },{
@@ -108,7 +108,7 @@ const magData = {
         backgroundColor: 'rgb(150, 50, 130)',
         borderColor: 'rgb(150, 50, 130)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     },{
@@ -116,7 +116,7 @@ const magData = {
         backgroundColor: 'rgb(150, 250, 100)',
         borderColor: 'rgb(150, 250, 100)',
         borderJoinStyle: 'miter',
-        data: [0],
+        data: [],
         lineTension: 0.1,
         spanGaps: true,
     }]
@@ -160,3 +160,11 @@ const updateMagChart = (magData) => {
     magChart.data.datasets[2].data.push(magData.Z);
     magChart.update('easeInOutQuad');
 };
+
+const updateLabels = () => {
+    if (labels.length > 0) {
+        labels.push(labels[labels.length - 1] + 1);
+    } else {
+        labels.push(0);
+    }
+}

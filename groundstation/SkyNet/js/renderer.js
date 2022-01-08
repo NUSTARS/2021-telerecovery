@@ -28,7 +28,7 @@ async function listSerialPorts() {
 // This timeout reschedules itself.
 setTimeout(function listPorts() {
   listSerialPorts();
-  setTimeout(listPorts, 200000);
+  setTimeout(listPorts, 2000);
 }, 2000);
 
 // datatojson
@@ -81,10 +81,10 @@ $('.btn-submit').click((data) => {
       const jsonData = JSON.parse(dataStringToJSON(data.toString()));
         console.log(`DATA: ${dataStringToJSON(data.toString())}`);
         $('.receive-windows').append(data.toString());
-        labels.push(labels[labels.length - 1] + 1);
         updateAccelerationChart(jsonData.Acceleration);
         updateGyroChart(jsonData.Gyro);
         updateMagChart(jsonData.Mag);
+        updateLabels();
         $('.altitude-display').text(`${parseFloat(jsonData.Altitude).toFixed(1)} M`);
         $('.temp-display').text(`${parseFloat(jsonData.Temp).toFixed(1)} C`);
         if (jsonData.ToF < 5) {
