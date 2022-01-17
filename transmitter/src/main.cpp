@@ -118,7 +118,7 @@ void loop() {
   accelerometer->getEvent(&accel_event);
   
   // Pack up the data into an array
-  char buffer[512];
+  char buffer[200];
   char data_format[] = "%hu,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f";
 
   sprintf(buffer,data_format,
@@ -138,7 +138,9 @@ void loop() {
   );
 
   // Send data buffer with LoRa
+  Serial.println(buffer);
   LoRa.beginPacket();
+  LoRa.setSignalBandwidth(250E3);
   LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
   LoRa.print(buffer);
   LoRa.endPacket();
