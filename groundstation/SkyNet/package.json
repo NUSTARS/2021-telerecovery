@@ -1,6 +1,6 @@
 {
     "name": "NUSTARS-SkyNet",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Telemetry ground station client developed by NUSTARS.",
     "main": "main.js",
     "scripts": {
