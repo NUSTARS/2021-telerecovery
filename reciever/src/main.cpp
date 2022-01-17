@@ -24,7 +24,7 @@ void setup() {
 
   OLED_init(); // Initialize the OLED screen
  
-  LoRa.setSignalBandwidth(250E3); // must match transmitter
+  LoRa.setSignalBandwidth(500E3); // must match transmitter
  
   LoRa.receive(); // Initialize LoRa for recieving
 }

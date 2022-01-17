@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 
 const serialport = require('serialport')
+const Readline = require('@serialport/parser-readline')
 const tableify = require('tableify')
 
 async function listSerialPorts() {
@@ -76,12 +77,13 @@ $('.btn-submit').click((data) => {
     port = new serialport(COM, {
         baudRate: parseInt(BaudRate)
     });
+    const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
     $('.receive-windows').text(`Opening: ${COM}, Using Baud Rate: ${BaudRate}`);
     $('.receive-windows').append('<br/>=======================================<br/>');
-    port.on('data', data => {
+    parser.on('data', data => {
       const jsonData = JSON.parse(dataStringToJSON(data.toString()));
         console.log(`DATA: ${dataStringToJSON(data.toString())}`);
-        $('.receive-windows').append(data.toString());
+        $('.receive-windows').prepend(`${data.toString()}\r\n`);
         updateAccelerationChart(jsonData.Acceleration);
         updateGyroChart(jsonData.Gyro);
         updateMagChart(jsonData.Mag);

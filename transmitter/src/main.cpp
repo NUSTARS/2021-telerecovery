@@ -89,7 +89,6 @@ void setup(void) {
   Wire.setClock(400000); // 400KHz
 }
 
-
 void loop() {
 
   startTime = millis();
@@ -118,7 +117,7 @@ void loop() {
   accelerometer->getEvent(&accel_event);
   
   // Pack up the data into an array
-  char buffer[200];
+  char buffer[150];
   char data_format[] = "%hu,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f";
 
   sprintf(buffer,data_format,
@@ -137,12 +136,26 @@ void loop() {
     mag_event.magnetic.z
   );
 
-  // Send data buffer with LoRa
-  Serial.println(buffer);
+  float temptemperature = bmp.temperature;
+  float temppressure = bmp.pressure;
+  float tempaltitude = bmp.readAltitude(SEALEVELPRESSURE_HPA);
+  
   LoRa.beginPacket();
-  LoRa.setSignalBandwidth(250E3);
-  LoRa.setTxPower(14,RF_PACONFIG_PASELECT_PABOOST);
-  LoRa.print(buffer);
+  LoRa.setSignalBandwidth(500E3);
+  LoRa.setTxPower(20,RF_PACONFIG_PASELECT_PABOOST);
+  LoRa.write((uint8_t)tof_data);
+  LoRa.write((uint8_t *) &temptemperature, 4);
+  LoRa.write((uint8_t *) &temppressure, 4);
+  LoRa.write((uint8_t *) &tempaltitude, 4);
+  LoRa.write((uint8_t *) &accel_event.acceleration.x, 4);
+  LoRa.write((uint8_t *) &accel_event.acceleration.y, 4);
+  LoRa.write((uint8_t *) &accel_event.acceleration.z, 4);
+  LoRa.write((uint8_t *) &gyro_event.gyro.x, 4);
+  LoRa.write((uint8_t *) &gyro_event.gyro.y, 4);
+  LoRa.write((uint8_t *) &gyro_event.gyro.z, 4);
+  LoRa.write((uint8_t *) &mag_event.magnetic.x, 4);
+  LoRa.write((uint8_t *) &mag_event.magnetic.y, 4);
+  LoRa.write((uint8_t *) &mag_event.magnetic.z, 4);
   LoRa.endPacket();
 
   // Each loop should be at least 20ms.
