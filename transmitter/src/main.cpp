@@ -40,6 +40,9 @@ void setup(void) {
   Serial.begin(115200); // init serial for testings
   while (!Serial) delay(10);  
 
+  pinMode(21, OUTPUT);
+  digitalWrite(21, LOW); // Enable Vext
+
   // Initialize time of flight sensor
   if (!ToF.begin()) {
     Serial.println(F("Failed to boot VL53L0X"));
