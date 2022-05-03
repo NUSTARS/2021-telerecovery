@@ -1,5 +1,5 @@
 [Eagle]
-Version="09 05 01"
+Version="09 06 02"
 Platform="Windows"
 Globals="Globals"
 Desktop="Desktop"
@@ -306,5 +306,5 @@ Type="Control Panel"
 Number=0
 
 [Desktop]
-Screen="4480 1440"
+Screen="3640 1920"
 Window="Win_1"
