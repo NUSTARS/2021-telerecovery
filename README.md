@@ -8,7 +8,6 @@ A Telemetry Software-Hardware Package for High Powered Rockets.
 
 
 ## Useage
-*Note: almost all this code is hardware dependent so unless you have the exact same hardware, you can't use it. The groundstation app is not entirely hardware dependent/the incoming data could be simulated without too much trouble*
 
 The easiest way to use the code in this repo is to download PlatformIO and use the provided platformio.ini initialization file when you create a new project. PlatformIO works great with VS code. 
 
