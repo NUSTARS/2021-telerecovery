@@ -2,7 +2,7 @@
 A Telemetry Software-Hardware Package for High Powered Rockets.
 
 # TODO:
-[] Implement storing data in onboard flash memory in transmitter board
+( ) Implement storing data in onboard flash memory in transmitter board
 [] Use sensor readings to determine apogee
 [] Improvements on groundstation
 
