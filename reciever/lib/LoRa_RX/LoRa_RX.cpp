@@ -48,22 +48,22 @@ void cbk(int packetSize) {
   rssi = "RSSI = " + String(LoRa.packetRssi(), DEC) ;
   OLED_print(0,0,MAX_SCREEN_HEIGHT,rssi);
 
-// // Pack up the data into an array
-char buffer[150];
-char data_format[] = "%u,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%i";
+  // // Pack up the data into an array
+  char buffer[150];
+  char data_format[] = "%u,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%i";
 
-temperature = *((float *)temp_temperature);
-pressure = *((float *)temp_pressure);
-altitude = *((float *)temp_altitude);
-accelx = *((float *)temp_accelx);
-accely = *((float *)temp_accely);
-accelz = *((float *)temp_accelz);
-gyrox = *((float *)temp_gyrox);
-gyroy = *((float *)temp_gyroy);
-gyroz = *((float *)temp_gyroz);
-magx = *((float *)temp_magx);
-magy = *((float *)temp_magy);
-magz = *((float *)temp_magz);
+  temperature = *((float *)temp_temperature);
+  pressure = *((float *)temp_pressure);
+  altitude = *((float *)temp_altitude);
+  accelx = *((float *)temp_accelx);
+  accely = *((float *)temp_accely);
+  accelz = *((float *)temp_accelz);
+  gyrox = *((float *)temp_gyrox);
+  gyroy = *((float *)temp_gyroy);
+  gyroz = *((float *)temp_gyroz);
+  magx = *((float *)temp_magx);
+  magy = *((float *)temp_magy);
+  magz = *((float *)temp_magz);
 
   sprintf(buffer,data_format,
     ToF,
