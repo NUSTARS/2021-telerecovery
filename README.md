@@ -5,6 +5,8 @@ A Telemetry Software-Hardware Package for High Powered Rockets.
 - [ ] Implement storing data in onboard flash memory in transmitter board
 - [ ] Implement GPS reading
 - [ ] Use sensor readings to determine apogee
+- [ ] Move calculations to groundstation when feasilble such as altitude from pressure
+- [ ] Calculate pressure with current temperature from sensor for greater accuracy
 - [ ] Improvements on groundstation
 
 
