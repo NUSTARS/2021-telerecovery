@@ -1,25 +1,13 @@
-// Adapted from calibration example in Adafruit_AHRS library
-
-#include "transmitter.h"
-
-Adafruit_Sensor *accelerometer, *gyroscope, *magnetometer; // IMU
-
-// see the the LSM6DS_LIS3MDL file in this project to change board to LSM6DS33, LSM6DS3U, LSM6DSOX, etc
-#include "LSM6DS_LIS3MDL.h"  
-
-// select either EEPROM or SPI FLASH storage:
-#ifdef ADAFRUIT_SENSOR_CALIBRATION_USE_EEPROM
-  Adafruit_Sensor_Calibration_EEPROM cal;
-#else
-  Adafruit_Sensor_Calibration_SDFat cal;
-#endif
-
+#include "transmitter.h"  
 
 // Declare sensor objects
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); // time of flight
 Adafruit_BMP3XX bmp; // pressure                  
 
 // variables to store IMU data
+Adafruit_Sensor *accelerometer, *gyroscope, *magnetometer; // IMU
+// see the the LSM6DS_LIS3MDL file in this project to change board to LSM6DS33, LSM6DS3U, LSM6DSOX, etc
+#include "LSM6DS_LIS3MDL.h"
 sensors_event_t mag_event, gyro_event, accel_event;
 
 unsigned long startTime; // time for loop
@@ -69,7 +57,7 @@ void setup(void) {
 
   // Initialize IMU sensors
   if (!init_sensors()) {
-    Serial.println("Failed to find IMU sensors");
+    Serial.println(F("Failed to find IMU sensors"));
     while (1) delay(10);
   } else {
     Serial.println(F("Booted IMU sensors"));
@@ -97,12 +85,9 @@ void loop() {
   // Read time of flight sensor (unsigned short)
   VL53L0X_RangingMeasurementData_t val = read_ToF(ToF);
   uint16_t tof_data=0;
-  if (val.RangeStatus != 4)
-  {
+  if (val.RangeStatus != 4) {
     tof_data = val.RangeMilliMeter;
-  }
-  else
-  {
+  } else {
     // if data is bad (probably nothing in range) set equal to zero
     tof_data = 0;
   }
