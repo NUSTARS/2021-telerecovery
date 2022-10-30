@@ -1,9 +1,10 @@
 // Project header file which includes important headers and defines some constants
 #include <Arduino.h>
 #include <Adafruit_Sensor_Calibration.h>
+#include <SparkFun_u-blox_GNSS_Arduino_Library.h>
+#include <Adafruit_BMP3XX.h>
 #include "heltec.h"
 #include "ToF.h"
-#include "Adafruit_BMP3XX.h"
 
 #define BAND 915E6  // You can set band here directly,e.g. 868E6,915E6
 #define SEALEVELPRESSURE_HPA (1028)

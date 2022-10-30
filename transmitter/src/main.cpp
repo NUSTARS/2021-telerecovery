@@ -1,4 +1,4 @@
-#include "transmitter.h"  
+#include "transmitter.h"
 
 // Declare sensor objects
 Adafruit_VL53L0X ToF = Adafruit_VL53L0X(); // time of flight
@@ -12,6 +12,9 @@ sensors_event_t mag_event, gyro_event, accel_event;
 
 unsigned long startTime; // time for loop
 int loopcount = 0;
+
+SFE_UBLOX_GNSS myGPS;
+int counter = 0; // Disable the debug messages when counter reaches 20
 
 /*--------------------------------------------------*/
 void setup(void) {
@@ -28,8 +31,8 @@ void setup(void) {
   Serial.begin(115200); // init serial for testings
   while (!Serial) delay(10);  
 
-  pinMode(21, OUTPUT);
-  digitalWrite(21, LOW); // Enable Vext
+  // pinMode(21, OUTPUT);
+  // digitalWrite(21, LOW); // Enable Vext
 
   // Initialize time of flight sensor
   if (!ToF.begin()) {
@@ -38,6 +41,18 @@ void setup(void) {
   } else {
     Serial.println(F("Booted VL53L0X"));
   }
+
+  // Initialize GPS
+  if (myGPS.begin() == false) //Connect to the Ublox module using Wire port
+  {
+    Serial.println(F("Failed to find Ublox GPS"));
+    while (1);
+  } else {
+    Serial.println(F("Booted GPS"));
+  }
+
+  myGPS.setI2COutput(COM_TYPE_UBX); //Set the I2C port to output UBX only (turn off NMEA noise)
+  myGPS.enableDebugging();
 
   // Initialize BMP388 pressure sensor
   if (!bmp.begin_I2C()) {
@@ -138,6 +153,45 @@ void loop() {
   LoRa.write((uint8_t *) &mag_event.magnetic.y, 4);
   LoRa.write((uint8_t *) &mag_event.magnetic.z, 4);
   LoRa.endPacket();
+
+  long latitude = myGPS.getLatitude();
+    Serial.print(F("Lat: "));
+    Serial.print(latitude);
+
+    long longitude = myGPS.getLongitude();
+    Serial.print(F(" Long: "));
+    Serial.print(longitude);
+    Serial.print(F(" (degrees * 10^-7)"));
+
+    long altitude = myGPS.getAltitude();
+    Serial.print(F(" Alt: "));
+    Serial.print(altitude);
+    Serial.print(F(" (mm)"));
+
+    byte SIV = myGPS.getSIV();
+    Serial.print(F(" SIV: "));
+    Serial.print(SIV);
+
+    Serial.print(F("   "));
+    Serial.print(myGPS.getYear());
+    Serial.print(F("-"));
+    Serial.print(myGPS.getMonth());
+    Serial.print(F("-"));
+    Serial.print(myGPS.getDay());
+    Serial.print(F(" "));
+    Serial.print(myGPS.getHour());
+    Serial.print(F(":"));
+    Serial.print(myGPS.getMinute());
+    Serial.print(F(":"));
+    Serial.println(myGPS.getSecond());
+    
+    Serial.println();
+
+    counter++; // Increment counter
+    if (counter == 20)
+    {
+      myGPS.disableDebugging(); // Disable the debug messages when counter reaches 20
+    }
 
   // Each loop should be at least 20ms.
   while(millis() - startTime < (DT*1000)) {
