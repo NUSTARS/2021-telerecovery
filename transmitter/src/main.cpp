@@ -47,12 +47,16 @@ void setup(void) {
   if (!ToF.begin()) {
     Serial.println(F("Failed to boot VL53L0X"));
     while(1) {;}
+  } else {
+    Serial.println(F("Booted VL53L0X"));
   }
 
   // Initialize BMP388 pressure sensor
   if (!bmp.begin_I2C()) {
-    Serial.println("Failed to boot BMP388");
+    Serial.println(F("Failed to boot BMP388"));
     while (1);
+  } else {
+    Serial.println(F("Booted BPM388"));
   }
 
   // Set up oversampling and filter initialization on the BMP388
@@ -63,29 +67,18 @@ void setup(void) {
 
   // Uncomment Serial.print statements for debugging 
 
-  // Initialize calibration helper code
-  if (!cal.begin()) {
-    // Serial.println("Failed to initialize calibration helper");
-    while (1) yield();
-  }
-
-  // Load existing calibration from EEPROM if its there, or use default
-  if (! cal.loadCalibration()) {
-    // Serial.println("No calibration loaded/found... will start with defaults");
-  } else {
-    // Serial.println("Loaded existing calibration");
-  }
-
   // Initialize IMU sensors
   if (!init_sensors()) {
-    // Serial.println("Failed to find sensors");
+    Serial.println("Failed to find IMU sensors");
     while (1) delay(10);
+  } else {
+    Serial.println(F("Booted IMU sensors"));
   }
 
   // Print out sensor information
-  // accelerometer->printSensorDetails();
-  // gyroscope->printSensorDetails();
-  // magnetometer->printSensorDetails();
+  accelerometer->printSensorDetails();
+  gyroscope->printSensorDetails();
+  magnetometer->printSensorDetails();
 
   setup_sensors();
   
