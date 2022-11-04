@@ -16,50 +16,68 @@ int loopcount = 0;
 SFE_UBLOX_GNSS myGPS;
 int counter = 0; // Disable the debug messages when counter reaches 20
 
+TwoWire I2CBUS = TwoWire(3);
+
 /*--------------------------------------------------*/
 void setup(void) {
 
   // Start Heltec LoRa ESP32 Board
   Heltec.begin(
-      false /*DisplayEnable Enable*/,
+      true /*DisplayEnable Enable*/,
       true /*LoRa enable*/,
       true /*Serial Enable*/,
       true /*PABOOST Enable*/,
       BAND /*long BAND*/);
-  delay(500); // wait for board to be initialized
-
+  Heltec.display->init();
+  Heltec.display->flipScreenVertically();
+	Heltec.display->setFont(ArialMT_Plain_10);
+	Heltec.display->drawString(0, 0, "SkyNet Transmitter Started");
+	Heltec.display->display();
+  delay(1000); // wait for board to be initialized
   Serial.begin(115200); // init serial for testings
   while (!Serial) delay(10);  
 
-  // pinMode(21, OUTPUT);
-  // digitalWrite(21, LOW); // Enable Vext
+  Heltec.VextON(); // Enable 3.3V Vext
+  I2CBUS.begin(13, 22, 100000);
 
   // Initialize time of flight sensor
-  if (!ToF.begin()) {
+  if (!ToF.begin(0x29, false, &I2CBUS)) {
     Serial.println(F("Failed to boot VL53L0X"));
+    Heltec.display->drawString(0, 10, "Failed to boot VL53L0X");
+    Heltec.display->display();
     while(1) {;}
   } else {
     Serial.println(F("Booted VL53L0X"));
+    Heltec.display->drawString(0, 10, "Booted VL53L0X");
+    Heltec.display->display();
   }
 
   // Initialize GPS
-  if (myGPS.begin() == false) //Connect to the Ublox module using Wire port
+  if (myGPS.begin(I2CBUS, 0x42, 1100, false) == false) //Connect to the Ublox module using Wire port
   {
     Serial.println(F("Failed to find Ublox GPS"));
+    Heltec.display->drawString(0, 20, "Failed to find Ublox GPS");
+    Heltec.display->display();
     while (1);
   } else {
     Serial.println(F("Booted GPS"));
+    Heltec.display->drawString(0, 20, "Booted GPS");
+    Heltec.display->display();
   }
 
   myGPS.setI2COutput(COM_TYPE_UBX); //Set the I2C port to output UBX only (turn off NMEA noise)
   myGPS.enableDebugging();
 
   // Initialize BMP388 pressure sensor
-  if (!bmp.begin_I2C()) {
+  if (!bmp.begin_I2C(0x77, &I2CBUS)) {
     Serial.println(F("Failed to boot BMP388"));
+    Heltec.display->drawString(0, 30, "Failed to boot BMP388");
+    Heltec.display->display();
     while (1);
   } else {
     Serial.println(F("Booted BPM388"));
+    Heltec.display->drawString(0, 30, "Booted BPM388");
+    Heltec.display->display();
   }
 
   // Set up oversampling and filter initialization on the BMP388
@@ -71,11 +89,15 @@ void setup(void) {
   // Uncomment Serial.print statements for debugging 
 
   // Initialize IMU sensors
-  if (!init_sensors()) {
+  if (!init_sensors(&I2CBUS)) {
     Serial.println(F("Failed to find IMU sensors"));
+    Heltec.display->drawString(0, 40, "Failed to find IMU sensors");
+    Heltec.display->display();
     while (1) delay(10);
   } else {
     Serial.println(F("Booted IMU sensors"));
+    Heltec.display->drawString(0, 40, "Booted IMU sensors");
+    Heltec.display->display();
   }
 
   // Print out sensor information
