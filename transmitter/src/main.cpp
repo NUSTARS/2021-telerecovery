@@ -114,6 +114,9 @@ void loop() {
 
   startTime = millis();
 
+  // clear the display
+  Heltec.display->clear();
+
   // Read pressure sensor (float)
   if (!bmp.performReading()) {
     return;
@@ -179,20 +182,34 @@ void loop() {
   long latitude = myGPS.getLatitude();
     Serial.print(F("Lat: "));
     Serial.print(latitude);
+    char mystr[40];
+    sprintf(mystr,"Lat: %i",latitude);
+    Heltec.display->drawString(0, 0, mystr);
 
     long longitude = myGPS.getLongitude();
     Serial.print(F(" Long: "));
     Serial.print(longitude);
     Serial.print(F(" (degrees * 10^-7)"));
+    sprintf(mystr,"Long: %i",longitude);
+    Heltec.display->drawString(0, 10, mystr);
+
+    long altitudeMSL = myGPS.getAltitudeMSL();
+    Serial.print(F(" AltMSL: "));
+    Serial.print(altitudeMSL);
+    Serial.print(F(" (mm)"));
 
     long altitude = myGPS.getAltitude();
     Serial.print(F(" Alt: "));
     Serial.print(altitude);
     Serial.print(F(" (mm)"));
+    sprintf(mystr,"Alt: %i AltMSL: %i (m)",altitude/1000, altitudeMSL/1000);
+    Heltec.display->drawString(0, 20, mystr);
 
     byte SIV = myGPS.getSIV();
     Serial.print(F(" SIV: "));
     Serial.print(SIV);
+    sprintf(mystr,"SIV: %i",SIV);
+    Heltec.display->drawString(0, 30, mystr);
 
     Serial.print(F("   "));
     Serial.print(myGPS.getYear());
@@ -206,14 +223,22 @@ void loop() {
     Serial.print(myGPS.getMinute());
     Serial.print(F(":"));
     Serial.println(myGPS.getSecond());
-    
-    Serial.println();
+    sprintf(mystr,"%i/%i/%i %i:%i:%i",myGPS.getYear(), myGPS.getMonth(), myGPS.getDay(), myGPS.getHour(), myGPS.getMinute(), myGPS.getSecond());
+    Heltec.display->drawString(0, 40, mystr);
 
     counter++; // Increment counter
+    sprintf(mystr,"SkyNet Operational - %i", counter);
+    Heltec.display->drawString(0, 50, mystr);
+
+    Serial.println();
+
     if (counter == 20)
     {
       myGPS.disableDebugging(); // Disable the debug messages when counter reaches 20
     }
+
+  
+  Heltec.display->display();
 
   // Each loop should be at least 20ms.
   while(millis() - startTime < (DT*1000)) {
