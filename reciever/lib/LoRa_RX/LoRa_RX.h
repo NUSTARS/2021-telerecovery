@@ -11,7 +11,7 @@ extern String rssi;
 extern String packSize;
 extern String packet;
 
-/* Function Prototypes */
-void cbk(int packetSize); 
+/* onReceive LoRa Packet */
+int onReceive(int packetSize); 
 
 #endif

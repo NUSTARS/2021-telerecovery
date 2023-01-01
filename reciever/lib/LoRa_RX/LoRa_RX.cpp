@@ -28,60 +28,93 @@ float magx;
 float magy;
 float magz;
 
-void cbk(int packetSize) {
-  packSize = String(packetSize,DEC);
-  ToF = LoRa.read();
-  LoRa.readBytes(temp_temperature, 4);
-  LoRa.readBytes(temp_pressure, 4);
-  LoRa.readBytes(temp_altitude, 4);
-  LoRa.readBytes(temp_accelx, 4);
-  LoRa.readBytes(temp_accely, 4);
-  LoRa.readBytes(temp_accelz, 4);
-  LoRa.readBytes(temp_gyrox, 4);
-  LoRa.readBytes(temp_gyroy, 4);
-  LoRa.readBytes(temp_gyroz, 4);
-  LoRa.readBytes(temp_magx, 4);
-  LoRa.readBytes(temp_magy, 4);
-  LoRa.readBytes(temp_magz, 4);
+// Define program states
+enum RocketState
+{
+  IDLE,
+  ARMED,
+  LAUNCHED,
+  RECOVERY
+};
 
-  // Oled show RSSI
-  rssi = "RSSI = " + String(LoRa.packetRssi(), DEC) ;
-  OLED_print(0,0,MAX_SCREEN_HEIGHT,rssi);
+int onReceive(int packetSize)
+{
+  if (packetSize == 0)
+    return -1; // Return if there's no packet
+  Serial.println(packetSize);
+  if (packetSize != 150)
+  {
+    String incoming_packet = "";
+    while (LoRa.available()) {
+      incoming_packet += (char)LoRa.read();
+    }
+    Serial.print("[S] ");
+    Serial.println(incoming_packet);
+    if (incoming_packet == "ARMED") {
+      return ARMED;
+    } else if (incoming_packet == "RECOVERY") {
+      return RECOVERY;
+    } else if (incoming_packet == "IDLE") {
+      return IDLE;
+    }
+  }
+  else
+  {
+    packSize = String(packetSize, DEC);
+    ToF = LoRa.read();
+    LoRa.readBytes(temp_temperature, 4);
+    LoRa.readBytes(temp_pressure, 4);
+    LoRa.readBytes(temp_altitude, 4);
+    LoRa.readBytes(temp_accelx, 4);
+    LoRa.readBytes(temp_accely, 4);
+    LoRa.readBytes(temp_accelz, 4);
+    LoRa.readBytes(temp_gyrox, 4);
+    LoRa.readBytes(temp_gyroy, 4);
+    LoRa.readBytes(temp_gyroz, 4);
+    LoRa.readBytes(temp_magx, 4);
+    LoRa.readBytes(temp_magy, 4);
+    LoRa.readBytes(temp_magz, 4);
 
-  // // Pack up the data into an array
-  char buffer[150];
-  char data_format[] = "%u,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%i";
+    // Oled show RSSI
+    rssi = "RSSI = " + String(LoRa.packetRssi(), DEC);
+    OLED_print(0, 0, MAX_SCREEN_HEIGHT, rssi);
 
-  temperature = *((float *)temp_temperature);
-  pressure = *((float *)temp_pressure);
-  altitude = *((float *)temp_altitude);
-  accelx = *((float *)temp_accelx);
-  accely = *((float *)temp_accely);
-  accelz = *((float *)temp_accelz);
-  gyrox = *((float *)temp_gyrox);
-  gyroy = *((float *)temp_gyroy);
-  gyroz = *((float *)temp_gyroz);
-  magx = *((float *)temp_magx);
-  magy = *((float *)temp_magy);
-  magz = *((float *)temp_magz);
+    // // Pack up the data into an array
+    char buffer[150];
+    char data_format[] = "%u,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%i";
 
-  sprintf(buffer,data_format,
-    ToF,
-    temperature,
-    pressure,
-    altitude,
-    accelx,
-    accely,
-    accelz,
-    gyrox,
-    gyroy,
-    gyroz,
-    magx,
-    magy,
-    magz,
-    LoRa.packetRssi() // Append package RSSI to printout
-  );
+    temperature = *((float *)temp_temperature);
+    pressure = *((float *)temp_pressure);
+    altitude = *((float *)temp_altitude);
+    accelx = *((float *)temp_accelx);
+    accely = *((float *)temp_accely);
+    accelz = *((float *)temp_accelz);
+    gyrox = *((float *)temp_gyrox);
+    gyroy = *((float *)temp_gyroy);
+    gyroz = *((float *)temp_gyroz);
+    magx = *((float *)temp_magx);
+    magy = *((float *)temp_magy);
+    magz = *((float *)temp_magz);
 
-  Serial.println(buffer); // Print packet over UART -> to JS app
+    sprintf(buffer, data_format,
+            ToF,
+            temperature,
+            pressure,
+            altitude,
+            accelx,
+            accely,
+            accelz,
+            gyrox,
+            gyroy,
+            gyroz,
+            magx,
+            magy,
+            magz,
+            LoRa.packetRssi() // Append package RSSI to printout
+    );
+
+    Serial.println(buffer); // Print packet over UART -> to JS app
+    return LAUNCHED;
+  }
+  return -1;
 }
-
