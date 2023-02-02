@@ -41,24 +41,23 @@ int onReceive(int packetSize)
 {
   if (packetSize == 0)
     return -1; // Return if there's no packet
-  Serial.println(packetSize);
-  if (packetSize != 150)
+  if (packetSize == 4)
   {
     String incoming_packet = "";
     while (LoRa.available()) {
       incoming_packet += (char)LoRa.read();
     }
-    Serial.print("[S] ");
+    Serial.print("[*]State Received: ");
     Serial.println(incoming_packet);
-    if (incoming_packet == "ARMED") {
+    if (incoming_packet == "ARMD") {
       return ARMED;
-    } else if (incoming_packet == "RECOVERY") {
+    } else if (incoming_packet == "RECY") {
       return RECOVERY;
     } else if (incoming_packet == "IDLE") {
       return IDLE;
     }
   }
-  else
+  else if (packetSize == 49)
   {
     packSize = String(packetSize, DEC);
     ToF = LoRa.read();

@@ -35,6 +35,9 @@ int counter = 0; // Disable the GPS debug messages when counter reaches 20
 
 TwoWire I2CBUS = TwoWire(3);
 
+long lastSendTime = 0;        // last send time
+int interval = 2000;          // interval between sends
+
 /*--------------------------------------------------*/
 void setup(void)
 {
@@ -149,7 +152,6 @@ void setup(void)
 
 bool checkIfArmed()
 {
-  Serial.println("Checking...");
   // Check for incoming packets
   int packetSize = LoRa.parsePacket();
   if (packetSize)
@@ -226,7 +228,6 @@ void loop()
   {
     case IDLE:
     {
-      sendPacket("IDLE");
       long latitude = myGPS.getLatitude();
       Serial.print(F("Lat: "));
       Serial.print(latitude);
@@ -289,13 +290,19 @@ void loop()
       {
         Serial.println("STATUS CHANGE - ARMED");
         currentState = ARMED;
+      } else {
+        if (millis() - lastSendTime > interval) {
+          lastSendTime = millis();
+          interval = random(2000) + 1000;    // 1-3 seconds    // Reset last send time
+          sendPacket("IDLE");
+        }
       }
       break;
     }
 
     case ARMED:
     {
-      sendPacket("ARMED");
+      sendPacket("ARMD");
       char mystr[40];
       sprintf(mystr, "SkyNet ARMED - %i", counter);
       Heltec.display->drawString(0, 50, mystr);
@@ -384,7 +391,7 @@ void loop()
 
     case RECOVERY:
     {
-      sendPacket("RECOVERY");
+      sendPacket("RECY");
       // Return to idle state
       currentState = IDLE;
       break;

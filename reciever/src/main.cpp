@@ -64,15 +64,17 @@ void loop()
       SA_STATUS = true;
     }
     count++;
-    sprintf(msg, "Packet received: %d", count);
+    sprintf(msg, "Packet Received: %d", count);
     OLED_print(0, 26, MAX_SCREEN_WIDTH, msg);
+    sprintf(msg, "State Received: %d", returned);
+    OLED_print(0, 18, MAX_SCREEN_WIDTH, msg);
   }
 
   if (SA_COMMAND == true && SA_STATUS == false && millis() - lastSendTime > interval) {
     sendPacket("SA");
     lastSendTime = millis();            // timestamp the message
-    interval = random(2000) + 1000;    // 2-3 seconds
-    Serial.println("Sent Another One");
+    interval = random(1000) + 500;    // 0.5-1.5 seconds
+    Serial.println("[*] SA - State Armed command sent - trying to arm the core...");
   }
 
   // Check to see if anything is available in the serial receive buffer
