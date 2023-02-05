@@ -95,7 +95,7 @@ int onReceive(int packetSize)
     magy = *((float *)temp_magy);
     magz = *((float *)temp_magz);
 
-    sprintf(buffer, data_format,
+    sprintf(buffer,data_format,
             ToF,
             temperature,
             pressure,
@@ -112,7 +112,9 @@ int onReceive(int packetSize)
             LoRa.packetRssi() // Append package RSSI to printout
     );
 
-    Serial.println(buffer); // Print packet over UART -> to JS app
+    Serial.print("/*");
+    Serial.print(buffer);
+    Serial.println("*/"); // Print packet over UART -> to JS app
     return LAUNCHED;
   }
   return -1;
