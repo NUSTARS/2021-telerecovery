@@ -65,9 +65,15 @@ void loop()
     }
     count++;
     sprintf(msg, "Packet Received: %d", count);
-    OLED_print(0, 26, MAX_SCREEN_WIDTH, msg);
-    sprintf(msg, "State Received: %d", returned);
     OLED_print(0, 18, MAX_SCREEN_WIDTH, msg);
+    sprintf(msg, "State Received: %d", returned);
+    OLED_print(0, 10, MAX_SCREEN_WIDTH, msg);
+    if (SA_COMMAND == true) {
+      OLED_print(0, 26, MAX_SCREEN_WIDTH, "SA Command Received");
+    }
+    else {
+      OLED_print(0, 26, MAX_SCREEN_WIDTH, "SA Command Not Received");
+    }
   }
 
   if (SA_COMMAND == true && SA_STATUS == false && millis() - lastSendTime > interval) {
