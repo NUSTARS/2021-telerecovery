@@ -14,8 +14,8 @@
     ],
     "author": "NUSTARS",
     "devDependencies": {
-        "electron": "^13.6.6",
-        "electron-packager": "^15.4.0",
+        "electron": "^24.1.2",
+        "electron-packager": "^17.1.1",
         "electron-rebuild": "^3.2.5"
     },
     "dependencies": {
